@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -126,24 +127,24 @@ public class DemoApplication implements IApplication {
 		@Override
 		protected void fillMenuBar(IMenuManager menuBar) {
 			super.fillMenuBar(menuBar);
-			menuBar.add(new ShowView("Load Data", "lineup.demo.generic"));
+			menuBar.add(new ShowView("Load Data", "lineup.demo.generic", true));
 
 			MenuManager menu2 = new MenuManager("Demos", "demos");
 			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
 			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
 			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
-			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012"));
-			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur"));
-			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50"));
-			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food"));
-			menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl"));
+			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012", false));
+			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
+			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50", false));
+			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
+			menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl", false));
 
 			menuBar.add(menu2);
 
 			menu2 = new MenuManager("Evaluation", "eval");
-			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012"));
-			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur"));
-			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food"));
+			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012", false));
+			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
+			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
 			menuBar.add(menu2);
 		}
 
@@ -152,10 +153,12 @@ public class DemoApplication implements IApplication {
 	static class ShowView extends ContributionItem implements SelectionListener {
 		private String title;
 		private String viewId;
+		private boolean multiple;
 
-		public ShowView(String title, String viewId) {
+		public ShowView(String title, String viewId, boolean multiple) {
 			this.title = title;
 			this.viewId = viewId;
+			this.multiple = multiple;
 		}
 		@Override
 		public void fill(Menu menu, int index) {
@@ -167,6 +170,10 @@ public class DemoApplication implements IApplication {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			try {
+				if (multiple)
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+							.showView(viewId, System.currentTimeMillis() + "", IWorkbenchPage.VIEW_ACTIVATE);
+				else
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId);
 			} catch (PartInitException e1) {
 				e1.printStackTrace();

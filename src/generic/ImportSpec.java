@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.caleydo.core.io.MatrixDefinition;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
+import org.caleydo.vis.rank.data.FloatInferrers;
 import org.caleydo.vis.rank.data.IFloatInferrer;
 import org.caleydo.vis.rank.model.ARankColumnModel;
 import org.caleydo.vis.rank.model.CategoricalRankColumnModel;
@@ -68,8 +70,8 @@ public class ImportSpec extends MatrixDefinition {
 
 	public static abstract class ColumnSpec {
 		protected int col;
-		protected Color color;
-		protected Color bgColor;
+		protected Color color = Color.LIGHT_GRAY;
+		protected Color bgColor = new Color(0.95f, .95f, .95f);
 
 		/**
 		 * @param col
@@ -100,8 +102,8 @@ public class ImportSpec extends MatrixDefinition {
 	}
 
 	public static class FloatColumnSpec extends ColumnSpec {
-		private PiecewiseMapping mapping;
-		private IFloatInferrer inferer;
+		protected PiecewiseMapping mapping = new PiecewiseMapping(0, 1);
+		protected IFloatInferrer inferer = FloatInferrers.fix(Float.NaN);
 
 		/**
 		 * @param mapping
@@ -131,7 +133,7 @@ public class ImportSpec extends MatrixDefinition {
 		}
 	}
 
-	public static class IntColumnSpec extends ColumnSpec {
+	public static class IntegerColumnSpec extends ColumnSpec {
 
 		@Override
 		public Object parse(String[] vals) {
@@ -167,15 +169,15 @@ public class ImportSpec extends MatrixDefinition {
 	}
 
 	public static class CategoricalColumnSpec extends ColumnSpec {
-		private List<String> categories;
+		private Set<String> categories;
 
 		/**
-		 * @param categories
-		 *            setter, see {@link categories}
+		 * @param set
 		 */
-		public void setCategories(List<String> categories) {
-			this.categories = categories;
+		public CategoricalColumnSpec(Set<String> set) {
+			this.categories = set;
 		}
+
 
 		@Override
 		public Object parse(String[] vals) {
