@@ -73,7 +73,7 @@ public class DemoApplication implements IApplication {
 
 		@Override
 		public String getInitialWindowPerspectiveId() {
-			return "rankvis.demo.per";
+			return "lineup.demo.per";
 		}
 	}
 
@@ -110,7 +110,8 @@ public class DemoApplication implements IApplication {
 			IMenuManager menuManager = getWindowConfigurer().getActionBarConfigurer().getMenuManager();
 			for (IContributionItem item : menuManager.getItems()) {
 
-				if (item.getId().contains("org.caleydo") && !item.getId().contains("org.caleydo.menu.window")) {
+				if (item.getId() != null && item.getId().contains("org.caleydo")
+						&& !item.getId().contains("org.caleydo.menu.window")) {
 					menuManager.remove(item);
 				}
 			}
@@ -125,22 +126,24 @@ public class DemoApplication implements IApplication {
 		@Override
 		protected void fillMenuBar(IMenuManager menuBar) {
 			super.fillMenuBar(menuBar);
+			menuBar.add(new ShowView("Load Data", "lineup.demo.generic"));
+
 			MenuManager menu2 = new MenuManager("Demos", "demos");
-			// menu2.add(new ShowView("University Rankings 2012", "rankvis.demo.university.mixed"));
-			// menu2.add(new ShowView("Academic Ranking Of World Universties", "rankvis.demo.university.arwu"));
-			// menu2.add(new ShowView("Measuring University Performance", "rankvis.demo.university.mup"));
-			menu2.add(new ShowView("World University Ranking 2012", "rankvis.demo.university.wur2012"));
-			menu2.add(new ShowView("World University Rankings", "rankvis.demo.university.wur"));
-			menu2.add(new ShowView("Top 100 under 50 2012", "rankvis.demo.university.top100under50"));
-			menu2.add(new ShowView("Food Nutrition", "rankvis.demo.food"));
-			menu2.add(new ShowView("NASA Task Load Index User Study Results", "rankvis.demo.nasatxl"));
+			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
+			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
+			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
+			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012"));
+			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur"));
+			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50"));
+			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food"));
+			menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl"));
 
 			menuBar.add(menu2);
 
 			menu2 = new MenuManager("Evaluation", "eval");
-			menu2.add(new ShowView("World University Ranking 2012", "rankvis.eval.university.wur2012"));
-			menu2.add(new ShowView("World University Rankings", "rankvis.demo.university.wur"));
-			menu2.add(new ShowView("Food Nutrition", "rankvis.demo.food"));
+			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012"));
+			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur"));
+			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food"));
 			menuBar.add(menu2);
 		}
 
@@ -181,7 +184,7 @@ public class DemoApplication implements IApplication {
 		@Override
 		public void createInitialLayout(IPageLayout layout) {
 			layout.setEditorAreaVisible(false);
-			layout.addView("rankvis.demo.university.top100under50", IPageLayout.TOP, IPageLayout.RATIO_MAX,
+			layout.addView("lineup.demo.university.top100under50", IPageLayout.TOP, IPageLayout.RATIO_MAX,
 					IPageLayout.ID_EDITOR_AREA);
 			layout.setFixed(true);
 		}

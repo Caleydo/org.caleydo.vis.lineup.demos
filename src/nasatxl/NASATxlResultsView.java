@@ -15,7 +15,7 @@ import demo.RankTableDemo.IModelBuilder;
  *
  */
 public class NASATxlResultsView extends ARcpRankTableDemoView {
-	private static final String ID = "rankvis.demo.nasatxl";
+	private static final String ID = "lineup.demo.nasatxl";
 	@Override
 	public IModelBuilder createModel() {
 		return new NASATxlResults();

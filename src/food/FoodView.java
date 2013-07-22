@@ -15,7 +15,7 @@ import demo.RankTableDemo.IModelBuilder;
  *
  */
 public class FoodView extends ARcpRankTableDemoView {
-	private static final String ID = "rankvis.demo.food";
+	private static final String ID = "lineup.demo.food";
 	@Override
 	public IModelBuilder createModel() {
 		return new Food();

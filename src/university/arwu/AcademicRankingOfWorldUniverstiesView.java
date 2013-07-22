@@ -15,7 +15,7 @@ import demo.RankTableDemo.IModelBuilder;
  *
  */
 public class AcademicRankingOfWorldUniverstiesView extends ARcpRankTableDemoView {
-	private static final String ID = "rankvis.demo.university.arwu";
+	private static final String ID = "lineup.demo.university.arwu";
 	@Override
 	public IModelBuilder createModel() {
 		return new AcademicRankingOfWorldUniversities();

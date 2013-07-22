@@ -3,7 +3,7 @@
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  ******************************************************************************/
-package university.mixed;
+package generic;
 
 import org.caleydo.core.gui.command.AOpenViewHandler;
 
@@ -14,11 +14,11 @@ import demo.RankTableDemo.IModelBuilder;
  * @author Samuel Gratzl
  *
  */
-public class MixedView extends ARcpRankTableDemoView {
-	private static final String ID = "lineup.demo.university.wur";
+public class GenericView extends ARcpRankTableDemoView {
+	private static final String ID = "lineup.demo.generic";
 	@Override
 	public IModelBuilder createModel() {
-		return new Mixed();
+		return new GenericModelBuilder();
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class MixedView extends ARcpRankTableDemoView {
 
 	public static class Handler extends AOpenViewHandler {
 		public Handler() {
-			super(ID);
+			super(ID, true);
 		}
 	}
 

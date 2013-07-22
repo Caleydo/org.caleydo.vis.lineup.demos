@@ -15,7 +15,7 @@ import demo.RankTableDemo.IModelBuilder;
  *
  */
 public class Top100Under50View extends ARcpRankTableDemoView {
-	private static final String ID = "rankvis.demo.university.wur";
+	private static final String ID = "lineup.demo.university.wur";
 	@Override
 	public IModelBuilder createModel() {
 		return new Top100Under50();
