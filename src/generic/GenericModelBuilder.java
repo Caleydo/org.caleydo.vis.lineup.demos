@@ -8,8 +8,10 @@ package generic;
 import generic.ImportSpec.ColumnSpec;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,7 +67,8 @@ public class GenericModelBuilder implements IModelBuilder {
 	private Pair<List<GenericRow>, String[]> readData() {
 		List<ColumnSpec> cols = spec.getColumns();
 		StringBuilder report = new StringBuilder();
-		try (BufferedReader r = new BufferedReader(new FileReader(spec.getDataSourcePath()))) {
+		try (BufferedReader r = Files.newBufferedReader(new File(spec.getDataSourcePath()).toPath(),
+				Charset.defaultCharset())) {
 			String header = r.readLine();
 			String[] columns = header.split(spec.getDelimiter());
 			String line;
