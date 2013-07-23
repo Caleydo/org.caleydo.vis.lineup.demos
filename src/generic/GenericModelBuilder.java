@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.caleydo.core.util.collection.Pair;
+import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.vis.rank.model.ARankColumnModel;
 import org.caleydo.vis.rank.model.RankRankColumnModel;
@@ -32,7 +33,7 @@ import demo.RankTableDemo.IModelBuilder;
  *
  */
 public class GenericModelBuilder implements IModelBuilder {
-
+	private static final Logger log = Logger.create(GenericModelBuilder.class);
 	private ImportSpec spec;
 
 	/**
@@ -63,24 +64,36 @@ public class GenericModelBuilder implements IModelBuilder {
 	 */
 	private Pair<List<GenericRow>, String[]> readData() {
 		List<ColumnSpec> cols = spec.getColumns();
+		StringBuilder report = new StringBuilder();
 		try (BufferedReader r = new BufferedReader(new FileReader(spec.getDataSourcePath()))) {
 			String header = r.readLine();
 			String[] columns = header.split(spec.getDelimiter());
 			String line;
 			List<GenericRow> result = new ArrayList<>();
-			while ((line = r.readLine()) != null) {
+			for(int line_i = 0; ((line = r.readLine()) != null); ++line_i) {
 				String[] vals = line.split(spec.getDelimiter());
 				Object[] data = new Object[spec.getColumns().size()];
 				for (int i = 0; i < cols.size(); ++i) {
-					data[i] = cols.get(i).parse(vals);
+					try {
+						data[i] = cols.get(i).parse(vals);
+					} catch (NumberFormatException e) {
+						log.error("can't parse: " + line_i + " col " + cols.get(i).col, e);
+						report.append(line_i).append("/").append(cols.get(i).col).append(": parsing error: ")
+								.append(e.getMessage()).append('\n');
+						data[i] = null;
+					}
 				}
 				result.add(new GenericRow(data));
+			}
+			if (report.length() > 0) {
+				ErrorDialog.openError(null, "Parsing Errors", "Loading Error", new Status(IStatus.ERROR,
+						"GenericModelBuilder", report.toString()));
 			}
 			return Pair.make(result, columns);
 		} catch (IOException e) {
 			ErrorDialog.openError(null, "Error during loading", "Loading Error", new Status(IStatus.ERROR,
 					"GenericModelBuilder", e.getMessage(), e));
-			e.printStackTrace();
+			log.error("can't parse", e);
 		}
 		return Pair.make(Collections.<GenericRow> emptyList(), null);
 	}

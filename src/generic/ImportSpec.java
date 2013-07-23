@@ -30,6 +30,8 @@ import org.caleydo.vis.rank.model.IntegerRankColumnModel;
 import org.caleydo.vis.rank.model.StringRankColumnModel;
 import org.caleydo.vis.rank.model.mapping.PiecewiseMapping;
 
+import demo.RankTableDemo;
+
 /**
  * @author Samuel Gratzl
  *
@@ -37,6 +39,13 @@ import org.caleydo.vis.rank.model.mapping.PiecewiseMapping;
 public class ImportSpec extends MatrixDefinition {
 	private List<ColumnSpec> columns = new ArrayList<>();
 	private String label;
+
+	/**
+	 *
+	 */
+	public ImportSpec() {
+		setColumnOfRowIds(-1);
+	}
 
 	/**
 	 * @param label
@@ -123,7 +132,7 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public Object parse(String[] vals) {
-			return new Float(vals[col]);
+			return RankTableDemo.toFloat(vals, col);
 		}
 
 		@Override
@@ -137,7 +146,10 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public Object parse(String[] vals) {
-			return new Integer(vals[col]);
+			String v = vals[col].trim();
+			if (v.isEmpty() || "-".equals(v))
+				return -1;
+			return new Integer(v);
 		}
 
 		@Override
