@@ -8,7 +8,7 @@ package demo;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.caleydo.core.serialize.ASerializedView;
-import org.caleydo.core.view.ARcpGLViewPart;
+import org.caleydo.core.view.ARcpGLElementViewPart;
 import org.caleydo.core.view.opengl.canvas.IGLCanvas;
 import org.caleydo.core.view.opengl.layout2.AGLElementView;
 import org.caleydo.core.view.opengl.layout2.GLElement;
@@ -20,7 +20,6 @@ import org.caleydo.vis.rank.model.RankTableModel;
 import org.caleydo.vis.rank.ui.RankTableKeyListener;
 import org.caleydo.vis.rank.ui.RankTableUI;
 import org.caleydo.vis.rank.ui.RankTableUIMouseKeyListener;
-import org.eclipse.swt.widgets.Composite;
 
 import demo.RankTableDemo.IModelBuilder;
 
@@ -28,20 +27,22 @@ import demo.RankTableDemo.IModelBuilder;
  * @author Samuel Gratzl
  *
  */
-public abstract class ARcpRankTableDemoView extends ARcpGLViewPart {
+public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 	public ARcpRankTableDemoView() {
 		super(SView.class);
-		serializedView = new SView();
 	}
 
 	@Override
-	public void createPartControl(Composite parent) {
-		super.createPartControl(parent);
-
-		view = new GLView(glCanvas, getViewGUIID(), getViewGUIID());
-		initializeView();
-		createPartControlGL();
+	protected AGLElementView createView(IGLCanvas canvas) {
+		return new GLView(canvas, getViewGUIID(), getViewGUIID());
 	}
+
+	/**
+	 * Returns the rcp-ID of the view
+	 *
+	 * @return rcp-ID of the view
+	 */
+	public abstract String getViewGUIID();
 
 	/**
 	 * @return
@@ -87,12 +88,6 @@ public abstract class ARcpRankTableDemoView extends ARcpGLViewPart {
 			return root;
 		}
 	}
-
-	@Override
-	public void createDefaultSerializedView() {
-		serializedView = new SView();
-	}
-
 
 
 	@XmlRootElement
