@@ -5,26 +5,26 @@
  ******************************************************************************/
 package university.arwu;
 
-import org.caleydo.core.util.color.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.caleydo.core.util.collection.Pair;
+import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.rank.data.FloatInferrers;
-import org.caleydo.vis.rank.model.ARankColumnModel;
-import org.caleydo.vis.rank.model.ARow;
-import org.caleydo.vis.rank.model.FloatRankColumnModel;
-import org.caleydo.vis.rank.model.IRow;
-import org.caleydo.vis.rank.model.OrderColumn;
-import org.caleydo.vis.rank.model.RankRankColumnModel;
-import org.caleydo.vis.rank.model.RankTableModel;
-import org.caleydo.vis.rank.model.StringRankColumnModel;
-import org.caleydo.vis.rank.model.mapping.PiecewiseMapping;
+import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.model.ARankColumnModel;
+import org.caleydo.vis.lineup.model.ARow;
+import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.IRow;
+import org.caleydo.vis.lineup.model.OrderColumn;
+import org.caleydo.vis.lineup.model.RankRankColumnModel;
+import org.caleydo.vis.lineup.model.RankTableModel;
+import org.caleydo.vis.lineup.model.StringRankColumnModel;
+import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 
 import university.endowments.EndowmentsYear;
 

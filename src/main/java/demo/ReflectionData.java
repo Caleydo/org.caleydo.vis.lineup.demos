@@ -7,7 +7,7 @@ package demo;
 
 import java.lang.reflect.Field;
 
-import org.caleydo.vis.rank.model.IRow;
+import org.caleydo.vis.lineup.model.IRow;
 
 import com.google.common.base.Function;
 

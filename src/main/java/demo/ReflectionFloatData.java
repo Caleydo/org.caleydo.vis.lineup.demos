@@ -7,8 +7,8 @@ package demo;
 
 import java.lang.reflect.Field;
 
-import org.caleydo.vis.rank.data.AFloatFunction;
-import org.caleydo.vis.rank.model.IRow;
+import org.caleydo.vis.lineup.data.AFloatFunction;
+import org.caleydo.vis.lineup.model.IRow;
 
 /**
  * @author Samuel Gratzl

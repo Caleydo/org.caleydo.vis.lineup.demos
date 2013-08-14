@@ -16,14 +16,14 @@ import java.util.Random;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.rank.model.ARankColumnModel;
-import org.caleydo.vis.rank.model.ARow;
-import org.caleydo.vis.rank.model.CategoricalRankRankColumnModel;
-import org.caleydo.vis.rank.model.CategoricalRankRankColumnModel.CategoryInfo;
-import org.caleydo.vis.rank.model.IRow;
-import org.caleydo.vis.rank.model.RankRankColumnModel;
-import org.caleydo.vis.rank.model.RankTableModel;
-import org.caleydo.vis.rank.model.mapping.BaseCategoricalMappingFunction;
+import org.caleydo.vis.lineup.model.ARankColumnModel;
+import org.caleydo.vis.lineup.model.ARow;
+import org.caleydo.vis.lineup.model.CategoricalRankRankColumnModel;
+import org.caleydo.vis.lineup.model.CategoricalRankRankColumnModel.CategoryInfo;
+import org.caleydo.vis.lineup.model.IRow;
+import org.caleydo.vis.lineup.model.RankRankColumnModel;
+import org.caleydo.vis.lineup.model.RankTableModel;
+import org.caleydo.vis.lineup.model.mapping.BaseCategoricalMappingFunction;
 
 import com.google.common.base.Function;
 

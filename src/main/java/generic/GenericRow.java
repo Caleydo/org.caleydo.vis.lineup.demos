@@ -7,9 +7,9 @@ package generic;
 
 import java.util.Objects;
 
-import org.caleydo.vis.rank.data.AFloatFunction;
-import org.caleydo.vis.rank.model.ARow;
-import org.caleydo.vis.rank.model.IRow;
+import org.caleydo.vis.lineup.data.AFloatFunction;
+import org.caleydo.vis.lineup.model.ARow;
+import org.caleydo.vis.lineup.model.IRow;
 
 import com.google.common.base.Function;
 
