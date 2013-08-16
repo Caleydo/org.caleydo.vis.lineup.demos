@@ -69,10 +69,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&
       <plugin id="org.caleydo.thirdparty.jogl-natives-macosx-universal" fragment="true"/>
       <plugin id="org.caleydo.thirdparty.jogl-natives-windows-amd64" fragment="true"/>
       <plugin id="org.caleydo.thirdparty.jogl-natives-windows-i586" fragment="true"/>
-      <plugin id="org.caleydo.thirdparty.jsr305"/>
       <plugin id="org.caleydo.util.gleem"/>
+      <plugin id="org.caleydo.vis.lineup"/>
       <plugin id="org.caleydo.vis.lineup.demos"/>
-      <plugin id="org.caleydo.vis.rank"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
