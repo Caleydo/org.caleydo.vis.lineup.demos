@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.caleydo.core.util.collection.Pair;
 import org.caleydo.core.util.logging.Logger;
-import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
@@ -27,7 +26,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 
-import demo.RankTableDemo;
 import demo.RankTableDemo.IModelBuilder;
 
 /**
@@ -41,8 +39,8 @@ public class GenericModelBuilder implements IModelBuilder {
 	/**
 	 *
 	 */
-	public GenericModelBuilder() {
-		this.spec = new ImportWizard().call();
+	public GenericModelBuilder(ImportSpec spec) {
+		this.spec = spec;
 	}
 
 	@Override
@@ -101,10 +99,6 @@ public class GenericModelBuilder implements IModelBuilder {
 		return Pair.make(Collections.<GenericRow> emptyList(), null);
 	}
 
-	public static void main(String[] args) {
-		// dump();
-		GLSandBox.main(args, RankTableDemo.class, "UserStudy NASATxlResults", new GenericModelBuilder());
-	}
 
 	@Override
 	public Iterable<? extends ARankColumnModel> createAutoSnapshotColumns(RankTableModel table, ARankColumnModel model) {

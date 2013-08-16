@@ -16,10 +16,19 @@ import demo.RankTableDemo.IModelBuilder;
  */
 public class GenericView extends ARcpRankTableDemoView {
 	private static final String ID = "lineup.demo.generic";
+	/**
+	 * bad HACK for transporting an element to the view
+	 */
+	public static ImportSpec lastSpec;
+	private ImportSpec spec;
+
 	@Override
 	public IModelBuilder createModel() {
-		return new GenericModelBuilder();
+		spec = lastSpec;
+		lastSpec = null;
+		return new GenericModelBuilder(spec);
 	}
+
 
 	@Override
 	public String getViewGUIID() {

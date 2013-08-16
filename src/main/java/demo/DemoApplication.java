@@ -5,6 +5,10 @@
  ******************************************************************************/
 package demo;
 
+import generic.GenericView;
+import generic.ImportSpec;
+import generic.ImportWizard;
+
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.action.ContributionItem;
@@ -128,7 +132,7 @@ public class DemoApplication implements IApplication {
 		protected void fillMenuBar(IMenuManager menuBar) {
 			super.fillMenuBar(menuBar);
 			MenuManager menu2 = new MenuManager("&File", "file");
-			menu2.add(new ShowView("&Load Data", "lineup.demo.generic", true));
+			menu2.add(new ShowWizardView());
 			menuBar.add(menu2);
 
 			menu2 = new MenuManager("&Demos", "demos");
@@ -150,6 +154,37 @@ public class DemoApplication implements IApplication {
 			menuBar.add(menu2);
 		}
 
+	}
+
+	static class ShowWizardView extends ContributionItem implements SelectionListener {
+		public ShowWizardView() {
+		}
+
+		@Override
+		public void fill(Menu menu, int index) {
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("&Load Data");
+			item.addSelectionListener(this);
+		}
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			try {
+				ImportSpec spec = new ImportWizard().call();
+				if (spec == null)
+					return;
+				GenericView.lastSpec = spec;
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+						.showView("lineup.demo.generic", System.currentTimeMillis() + "", IWorkbenchPage.VIEW_ACTIVATE);
+			} catch (PartInitException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
 	}
 
 	static class ShowView extends ContributionItem implements SelectionListener {

@@ -93,6 +93,13 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 	}
 
 	@Override
+	public boolean canFinish() {
+		if (!super.canFinish())
+			return false;
+		return getContainer().getCurrentPage() instanceof SpecifyDataPage;
+	}
+
+	@Override
 	public boolean performFinish() {
 		return true;
 	}
