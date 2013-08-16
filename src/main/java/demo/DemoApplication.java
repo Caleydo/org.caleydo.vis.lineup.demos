@@ -127,9 +127,11 @@ public class DemoApplication implements IApplication {
 		@Override
 		protected void fillMenuBar(IMenuManager menuBar) {
 			super.fillMenuBar(menuBar);
-			menuBar.add(new ShowView("Load Data", "lineup.demo.generic", true));
+			MenuManager menu2 = new MenuManager("&File", "file");
+			menu2.add(new ShowView("&Load Data", "lineup.demo.generic", true));
+			menuBar.add(menu2);
 
-			MenuManager menu2 = new MenuManager("Demos", "demos");
+			menu2 = new MenuManager("&Demos", "demos");
 			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
 			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
 			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
@@ -141,7 +143,7 @@ public class DemoApplication implements IApplication {
 
 			menuBar.add(menu2);
 
-			menu2 = new MenuManager("Evaluation", "eval");
+			menu2 = new MenuManager("&Evaluation", "eval");
 			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012", false));
 			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
 			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
