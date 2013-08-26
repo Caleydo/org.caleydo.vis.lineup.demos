@@ -7,30 +7,30 @@ package demo;
 
 import java.lang.reflect.Field;
 
-import org.caleydo.vis.lineup.data.AFloatFunction;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
 import org.caleydo.vis.lineup.model.IRow;
 
 /**
  * @author Samuel Gratzl
  *
  */
-public class ReflectionFloatData extends AFloatFunction<IRow> {
+public class ReflectionDoubleData extends ADoubleFunction<IRow> {
 	private final Field field;
 
-	public ReflectionFloatData(Field field) {
+	public ReflectionDoubleData(Field field) {
 		this.field = field;
 		field.setAccessible(true);
 	}
 
 	@Override
-	public float applyPrimitive(IRow in) {
+	public double applyPrimitive(IRow in) {
 		try {
 			Number v = (Number) field.get(in);
-			return v.floatValue();
+			return v.doubleValue();
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		return Float.NaN;
+		return Double.NaN;
 	}
 }
 

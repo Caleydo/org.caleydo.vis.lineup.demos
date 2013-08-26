@@ -14,10 +14,10 @@ import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.OrderColumn;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
@@ -31,7 +31,7 @@ import com.google.common.base.Function;
 
 import demo.RankTableDemo;
 import demo.RankTableDemo.IModelBuilder;
-import demo.ReflectionFloatData;
+import demo.ReflectionDoubleData;
 
 /**
  * @author Samuel Gratzl
@@ -69,9 +69,9 @@ public class MeasuringUniversityPerformance implements IModelBuilder {
 		table.add(new RankRankColumnModel());
 		MeasuringUniversityPerformanceData.addYear(table, "2005", new YearGetter(4));
 
-		table.add(new FloatRankColumnModel(new ReflectionFloatData(UniversityRow.class.getDeclaredField("enrollment")),
+		table.add(new DoubleRankColumnModel(new ReflectionDoubleData(UniversityRow.class.getDeclaredField("enrollment")),
 				GLRenderers.drawText("Enrollment Fall 2007", VAlign.CENTER), Color.LIGHT_GRAY, Color.LIGHT_GRAY
-						.brighter(), new PiecewiseMapping(0, Float.NaN), FloatInferrers.MEDIAN));
+						.brighter(), new PiecewiseMapping(0, Float.NaN), DoubleInferrers.MEDIAN));
 	}
 
 	@Override

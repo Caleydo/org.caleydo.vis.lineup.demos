@@ -21,9 +21,9 @@ import java.util.Map;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.AFloatFunction;
-import org.caleydo.vis.lineup.data.FloatInferrers;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.StackedRankColumnModel;
@@ -170,10 +170,10 @@ public class MeasuringUniversityPerformanceData {
 		return stacked;
 	}
 
-	private static FloatRankColumnModel col(Function<IRow, Entry[]> year, int col, String text, String color,
+	private static DoubleRankColumnModel col(Function<IRow, Entry[]> year, int col, String text, String color,
 			String bgColor) {
-		return new FloatRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
-				new Color(color), new Color(bgColor), unbound(), FloatInferrers.MEDIAN,
+		return new DoubleRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
+				new Color(color), new Color(bgColor), unbound(), DoubleInferrers.MEDIAN,
 				NumberFormat.getIntegerInstance(Locale.ENGLISH));
 	}
 
@@ -224,7 +224,7 @@ public class MeasuringUniversityPerformanceData {
 		return data;
 	}
 
-	static class ValueGetter extends AFloatFunction<IRow> {
+	static class ValueGetter extends ADoubleFunction<IRow> {
 		private final Function<IRow, Entry[]> year;
 		private final int type;
 
@@ -234,10 +234,10 @@ public class MeasuringUniversityPerformanceData {
 		}
 
 		@Override
-		public float applyPrimitive(IRow in) {
+		public double applyPrimitive(IRow in) {
 			Entry[] y = year.apply(in);
 			if (y == null || y.length <= type)
-				return Float.NaN;
+				return Double.NaN;
 			Entry e = y[type];
 			return e.value;
 		}

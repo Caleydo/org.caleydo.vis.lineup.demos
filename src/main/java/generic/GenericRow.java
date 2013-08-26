@@ -7,7 +7,7 @@ package generic;
 
 import java.util.Objects;
 
-import org.caleydo.vis.lineup.data.AFloatFunction;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
 import org.caleydo.vis.lineup.model.ARow;
 import org.caleydo.vis.lineup.model.IRow;
 
@@ -51,7 +51,7 @@ public class GenericRow extends ARow {
 		return Objects.toString(get(index), "");
 	}
 
-	public static class FloatGetter extends AFloatFunction<IRow> {
+	public static class FloatGetter extends ADoubleFunction<IRow> {
 		private final int index;
 
 		public FloatGetter(int index) {
@@ -59,7 +59,7 @@ public class GenericRow extends ARow {
 		}
 
 		@Override
-		public float applyPrimitive(IRow in) {
+		public double applyPrimitive(IRow in) {
 			return ((GenericRow) in).getFloat(index);
 		}
 	}

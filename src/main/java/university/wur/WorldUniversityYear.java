@@ -20,10 +20,10 @@ import java.util.TreeMap;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.AFloatFunction;
-import org.caleydo.vis.lineup.data.FloatInferrers;
-import org.caleydo.vis.lineup.data.IFloatSetterFunction;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.data.IDoubleSetterFunction;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.StackedRankColumnModel;
@@ -174,7 +174,7 @@ public class WorldUniversityYear {
 		// stacked.add(col(year, COL_citations, "Citations per faculty", dark[4], light[4]));
 		// stacked.add(col(year, COL_international, "International faculty ratio", dark[5], light[5]));
 		// stacked.add(col(year, COL_internationalstudents, "International student ratio", dark[6], light[6]));
-		List<FloatRankColumnModel> cols = new ArrayList<>();
+		List<DoubleRankColumnModel> cols = new ArrayList<>();
 		cols.add(col(year, COL_academic, "Academic reputation", "#FC9272", "#FEE0D2"));
 		cols.add(col(year, COL_employer, "Employer reputation", "#9ECAE1", "#DEEBF7"));
 		cols.add(col(year, COL_faculty, "Faculty/student ratio", "#A1D99B", "#E5F5E0"));
@@ -185,13 +185,13 @@ public class WorldUniversityYear {
 		final StackedRankColumnModel stacked;
 		if (asIs) {
 			stacked = null;
-			for (FloatRankColumnModel col : cols)
+			for (DoubleRankColumnModel col : cols)
 				table.add(col);
 		} else {
 			stacked = new StackedRankColumnModel();
 			stacked.setTitle(title);
 			table.add(stacked);
-			for (FloatRankColumnModel col : cols)
+			for (DoubleRankColumnModel col : cols)
 				stacked.add(col);
 
 			stacked.setWeights(new float[] { 40, 10, 20, 20, 5, 5 });
@@ -207,7 +207,7 @@ public class WorldUniversityYear {
 
 	public static void addSpecialYear(RankTableModel table, Function<IRow, WorldUniversityYear> year) {
 
-		FloatRankColumnModel c;
+		DoubleRankColumnModel c;
 		c = col(year, COL_arts, "Arts & Humanities", "#FFD92F", "#FFFFCC");
 		table.add(c);
 		c.hide();
@@ -222,16 +222,16 @@ public class WorldUniversityYear {
 		c.hide();
 	}
 
-	private static FloatRankColumnModel col(Function<IRow, WorldUniversityYear> year, int col, String text,
+	private static DoubleRankColumnModel col(Function<IRow, WorldUniversityYear> year, int col, String text,
 			String color, String bgColor) {
 		return col(year, col, text, new Color(color), new Color(bgColor));
 	}
 
-	private static FloatRankColumnModel col(Function<IRow, WorldUniversityYear> year, int col, String text,
+	private static DoubleRankColumnModel col(Function<IRow, WorldUniversityYear> year, int col, String text,
 			Color color, Color bgColor) {
-		return new FloatRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
+		return new DoubleRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
  color,
-				bgColor, percentage(), FloatInferrers.MEDIAN);
+				bgColor, percentage(), DoubleInferrers.MEDIAN);
 	}
 
 	protected static PiecewiseMapping percentage() {
@@ -283,7 +283,7 @@ public class WorldUniversityYear {
 		return result;
 	}
 
-	static class ValueGetter extends AFloatFunction<IRow> implements IFloatSetterFunction<IRow> {
+	static class ValueGetter extends ADoubleFunction<IRow> implements IDoubleSetterFunction<IRow> {
 		private final Function<IRow, WorldUniversityYear> year;
 		private final int subindex;
 
@@ -293,10 +293,10 @@ public class WorldUniversityYear {
 		}
 
 		@Override
-		public float applyPrimitive(IRow in) {
+		public double applyPrimitive(IRow in) {
 			WorldUniversityYear y = year.apply(in);
 			if (y == null)
-				return Float.NaN;
+				return Double.NaN;
 			return y.get(subindex);
 		}
 

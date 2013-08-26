@@ -22,11 +22,11 @@ import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
@@ -34,7 +34,7 @@ import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 import demo.RankTableDemo;
 import demo.RankTableDemo.IModelBuilder;
 import demo.ReflectionData;
-import demo.ReflectionFloatData;
+import demo.ReflectionDoubleData;
 
 /**
  * @author Samuel Gratzl
@@ -54,10 +54,10 @@ public class NASATxlResults implements IModelBuilder {
 		table.add(new CategoricalRankColumnModel<Integer>(GLRenderers.drawText("Task", VAlign.CENTER),
 				new ReflectionData<>(field("task"), Integer.class), taskMetaData));
 
-		ReflectionFloatData data = new ReflectionFloatData(field("time"));
-		FloatRankColumnModel f = new FloatRankColumnModel(data, GLRenderers.drawText("Execution Time (s)",
+		ReflectionDoubleData data = new ReflectionDoubleData(field("time"));
+		DoubleRankColumnModel f = new DoubleRankColumnModel(data, GLRenderers.drawText("Execution Time (s)",
 				VAlign.CENTER), new Color("#FFD92F"), new Color("#FFFFCC"), new PiecewiseMapping(0, Float.NaN),
-				FloatInferrers.MEDIAN);
+				DoubleInferrers.MEDIAN);
 		f.setWidth(150);
 		table.add(f);
 
@@ -133,12 +133,12 @@ public class NASATxlResults implements IModelBuilder {
 		return NASATxlTest.class.getDeclaredField(name);
 	}
 
-	private FloatRankColumnModel col(String field, String label, String color, String bgColor)
+	private DoubleRankColumnModel col(String field, String label, String color, String bgColor)
 			throws NoSuchFieldException, SecurityException {
-		ReflectionFloatData data = new ReflectionFloatData(field(field));
-		FloatRankColumnModel f = new FloatRankColumnModel(data, GLRenderers.drawText(label, VAlign.CENTER),
+		ReflectionDoubleData data = new ReflectionDoubleData(field(field));
+		DoubleRankColumnModel f = new DoubleRankColumnModel(data, GLRenderers.drawText(label, VAlign.CENTER),
  new Color(
-				color), new Color(bgColor), mapping(), FloatInferrers.MEDIAN);
+				color), new Color(bgColor), mapping(), DoubleInferrers.MEDIAN);
 		f.setWidth(150);
 		return f;
 	}

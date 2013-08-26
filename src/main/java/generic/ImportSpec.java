@@ -21,11 +21,11 @@ import java.util.TreeMap;
 import org.caleydo.core.io.MatrixDefinition;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
-import org.caleydo.vis.lineup.data.FloatInferrers;
-import org.caleydo.vis.lineup.data.IFloatInferrer;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.data.IDoubleInferrer;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IntegerRankColumnModel;
 import org.caleydo.vis.lineup.model.StringRankColumnModel;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
@@ -112,7 +112,7 @@ public class ImportSpec extends MatrixDefinition {
 
 	public static class FloatColumnSpec extends ColumnSpec {
 		protected PiecewiseMapping mapping = new PiecewiseMapping(0, 1);
-		protected IFloatInferrer inferer = FloatInferrers.fix(Float.NaN);
+		protected IDoubleInferrer inferer = DoubleInferrers.fix(Float.NaN);
 
 		/**
 		 * @param mapping
@@ -126,7 +126,7 @@ public class ImportSpec extends MatrixDefinition {
 		 * @param inferer
 		 *            setter, see {@link inferer}
 		 */
-		public void setInferer(IFloatInferrer inferer) {
+		public void setInferer(IDoubleInferrer inferer) {
 			this.inferer = inferer;
 		}
 
@@ -137,7 +137,7 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public ARankColumnModel create(String[] headers) {
-			return new FloatRankColumnModel(new FloatGetter(col), drawText(headers[col], VAlign.CENTER), color,
+			return new DoubleRankColumnModel(new FloatGetter(col), drawText(headers[col], VAlign.CENTER), color,
 					bgColor, mapping, inferer);
 		}
 	}

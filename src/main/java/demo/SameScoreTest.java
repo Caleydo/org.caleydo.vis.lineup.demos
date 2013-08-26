@@ -14,11 +14,11 @@ import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.AFloatFunction;
-import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
@@ -34,13 +34,13 @@ public class SameScoreTest implements IModelBuilder {
 	@Override
 	public void apply(RankTableModel table) throws Exception {
 		// table.add(new RankRankColumnModel());
-		table.add(new FloatRankColumnModel(new AFloatFunction<IRow>() {
+		table.add(new DoubleRankColumnModel(new ADoubleFunction<IRow>() {
 			@Override
-			public float applyPrimitive(IRow in) {
+			public double applyPrimitive(IRow in) {
 				return ((SimpleRow) in).value;
 			}
 		}, GLRenderers.drawText("Float", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
-				new PiecewiseMapping(0, Float.NaN), FloatInferrers.MEAN));
+				new PiecewiseMapping(0, Float.NaN), DoubleInferrers.MEAN));
 
 		Random r = new Random(200);
 		List<IRow> rows = new ArrayList<>(100);
