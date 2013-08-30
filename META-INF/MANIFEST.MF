@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: LineUp Demos
 Bundle-SymbolicName: org.caleydo.vis.lineup.demos;singleton:=true
-Bundle-Version: 3.0.2.qualifier
+Bundle-Version: 3.0.3.qualifier
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.caleydo.vis.lineup;bundle-version="3.0.2.qualifier",
- org.caleydo.core;bundle-version="3.0.2.qualifier"
+ org.caleydo.vis.lineup;bundle-version="3.0.3.qualifier",
+ org.caleydo.core;bundle-version="3.0.3.qualifier"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
