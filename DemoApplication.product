@@ -62,13 +62,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&
       <plugin id="org.apache.commons.logging"/>
       <plugin id="org.caleydo.core"/>
       <plugin id="org.caleydo.data"/>
-      <plugin id="org.caleydo.lib.args4j"/>
-      <plugin id="org.caleydo.lib.jgrapht"/>
-      <plugin id="org.caleydo.lib.jogl"/>
-      <plugin id="org.caleydo.lib.nattable"/>
+      <plugin id="org.caleydo.thirdparty.jgrapht"/>
+      <plugin id="org.caleydo.thirdparty.jogl"/>
+      <plugin id="org.caleydo.thirdparty.jogl-natives-linux-amd64" fragment="true"/>
+      <plugin id="org.caleydo.thirdparty.jogl-natives-linux-i586" fragment="true"/>
+      <plugin id="org.caleydo.thirdparty.jogl-natives-macosx-universal" fragment="true"/>
+      <plugin id="org.caleydo.thirdparty.jogl-natives-windows-amd64" fragment="true"/>
+      <plugin id="org.caleydo.thirdparty.jogl-natives-windows-i586" fragment="true"/>
       <plugin id="org.caleydo.util.gleem"/>
+      <plugin id="org.caleydo.vis.lineup"/>
       <plugin id="org.caleydo.vis.lineup.demos"/>
-      <plugin id="org.caleydo.vis.rank"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
@@ -88,11 +91,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&
       <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
-      <plugin id="org.eclipse.core.resources"/>
-      <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.resources.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.e4.core.commands"/>
       <plugin id="org.eclipse.e4.core.contexts"/>
       <plugin id="org.eclipse.e4.core.di"/>
@@ -126,6 +125,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.nebula.widgets.nattable.core"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.rcp"/>
@@ -147,7 +147,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&
       <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.kohsuke.args4j"/>
       <plugin id="org.w3c.css.sac"/>
+      <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>
       <plugin id="org.w3c.dom.svg"/>
    </plugins>

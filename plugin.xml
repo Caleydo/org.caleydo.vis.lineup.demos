@@ -70,7 +70,8 @@
             category="org.caleydo.core.views"
             class="generic.GenericView"
             id="lineup.demo.generic"
-            name="Generic">
+            name="Generic"
+            restorable="false">
       </view>
    </extension>
    <extension

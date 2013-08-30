@@ -1,4 +1,7 @@
 /bin
 /target
 /tmp
-/*.log
+.log
+.project
+.classpath
+.settings/
