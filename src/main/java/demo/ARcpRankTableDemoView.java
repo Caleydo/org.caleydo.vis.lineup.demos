@@ -7,9 +7,13 @@ package demo;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.caleydo.core.event.EventListenerManager.DeepScan;
 import org.caleydo.core.serialize.ASerializedView;
 import org.caleydo.core.view.ARcpGLElementViewPart;
+import org.caleydo.core.view.opengl.canvas.GLThreadListenerWrapper;
 import org.caleydo.core.view.opengl.canvas.IGLCanvas;
+import org.caleydo.core.view.opengl.canvas.IGLKeyListener;
+import org.caleydo.core.view.opengl.canvas.IGLMouseListener;
 import org.caleydo.core.view.opengl.layout2.AGLElementView;
 import org.caleydo.core.view.opengl.layout2.GLElement;
 import org.caleydo.vis.lineup.config.RankTableConfigBase;
@@ -51,6 +55,8 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 
 	class GLView extends AGLElementView {
 		protected final RankTableModel table;
+		@DeepScan
+		private final IGLKeyListener keyListener;
 
 		public GLView(IGLCanvas glCanvas, String viewType, String viewName) {
 			super(glCanvas, viewType, viewName);
@@ -62,9 +68,10 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 					return builder.createAutoSnapshotColumns(table, model);
 				}
 			});
+			keyListener = GLThreadListenerWrapper.wrap(new RankTableKeyListener(table));
 
 			try {
-				canvas.addKeyListener(new RankTableKeyListener(table));
+				canvas.addKeyListener(keyListener);
 				builder.apply(table);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
@@ -83,8 +90,13 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 			root.init(table, RankTableUIConfigs.DEFAULT, RowHeightLayouts.UNIFORM, RowHeightLayouts.FISH_EYE);
 
 			RankTableUIMouseKeyListener l = new RankTableUIMouseKeyListener(root.findBody());
-			this.canvas.addMouseListener(l);
-			canvas.addKeyListener(l);
+			IGLKeyListener key = GLThreadListenerWrapper.wrap((IGLKeyListener) l);
+			eventListeners.register(key);
+			canvas.addKeyListener(key);
+
+			IGLMouseListener mouse = GLThreadListenerWrapper.wrap((IGLMouseListener) l);
+			eventListeners.register(mouse);
+			canvas.addMouseListener(mouse);
 			return root;
 		}
 	}
