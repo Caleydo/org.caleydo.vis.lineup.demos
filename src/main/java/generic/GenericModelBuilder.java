@@ -66,7 +66,7 @@ public class GenericModelBuilder implements IModelBuilder {
 		List<ColumnSpec> cols = spec.getColumns();
 		StringBuilder report = new StringBuilder();
 		try (BufferedReader r = Files.newBufferedReader(new File(spec.getDataSourcePath()).toPath(),
-				Charset.defaultCharset())) {
+				Charset.forName("UTF-8"))) {
 			String header = r.readLine();
 			String[] columns = header.split(spec.getDelimiter());
 			String line;
