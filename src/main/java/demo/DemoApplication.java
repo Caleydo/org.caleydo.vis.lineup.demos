@@ -139,6 +139,7 @@ public class DemoApplication implements IApplication {
 			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
 			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
 			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
+			menu2.add(new ShowView("World University Ranking 2013", "lineup.demo.university.wur2013", false));
 			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012", false));
 			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
 			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50", false));
@@ -228,7 +229,7 @@ public class DemoApplication implements IApplication {
 		@Override
 		public void createInitialLayout(IPageLayout layout) {
 			layout.setEditorAreaVisible(false);
-			layout.addView("lineup.demo.university.top100under50", IPageLayout.TOP, IPageLayout.RATIO_MAX,
+			layout.addView("lineup.demo.university.wur2013", IPageLayout.TOP, IPageLayout.RATIO_MAX,
 					IPageLayout.ID_EDITOR_AREA);
 			layout.setFixed(true);
 		}

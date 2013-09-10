@@ -1,0 +1,28 @@
+<html>
+	<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
+	</head>
+	<body>
+		<script>
+$(function(){
+  $.getJSON("http://www.topuniversities.com/sites/qs.topuni/files/custom-rankings/121321.txt", function(data) {
+	x = data
+	var column_definition = [{"nid":"hidden"},{"rank":"hidden"},{"score_overall":"Score"},{"rank_display":"Rank"},{"title":"School Name"},{"link":"Link"},{"logo":"University Logo"},{"country_tid":"Country"},{"region_tid":"Region"},{"qs_stars":"QS Stars"},{"1110656":"Academic Reputation"},{"1110661":"Employer Reputation"},{"1110666":"Faculty Student"},{"1110671":"International Faculty"},{"1110676":"International Students"},{"1110681":"Citations per Faculty"},{"1110686":"Arts and Humanities"},{"1110691":"Engineering and Technology"},{"1110696":"Life Sciences and Medicine"},{"1110701":"Natural Science"},{"1110706":"Social Sciences and Management"}]
+
+	var headers = "qsrank	schoolname	qsstars	overall	academic	employer	faculty	international	internationalstudents	citations	arts	engineering	life	natural	social\n";
+
+	var d = x.map(function(x0) {
+	return [x0.rank,x0.title,x0.qs_stars,x0.score_overall,x0["1110656"].score,x0["1110661"].score,x0["1110666"].score,x0["1110671"].score,x0["1110676"].score,x0["1110681"].score,x0["1110686"].score,x0["1110691"].score,x0["1110696"].score,x0["1110701"].score,x0["1110706"].score].join(";")});
+	
+	var csv = headers+d.join("\n");
+
+	$("pre").remove();
+	$("<pre/>").prependTo("body");
+	$("pre:first").text(csv).css("font-size","8px");
+
+  });
+});
+</script>
+	</body>
+</html>

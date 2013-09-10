@@ -27,6 +27,13 @@
       <view
             allowMultiple="true"
             category="org.caleydo.core.views"
+            class="university.wur.WorldUniversityRanking2013View"
+            id="lineup.demo.university.wur2013"
+            name="World University Ranking 2013">
+      </view>
+      <view
+            allowMultiple="true"
+            category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRankingEvaluation1View"
             id="lineup.eval.university.wur2012"
             name="World University Ranking 2012">
