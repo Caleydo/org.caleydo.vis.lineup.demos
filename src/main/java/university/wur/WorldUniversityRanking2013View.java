@@ -22,6 +22,11 @@ public class WorldUniversityRanking2013View extends ARcpRankTableDemoView {
 	}
 
 	@Override
+	protected String getCopyright() {
+		return "<a href=\"https://docs.google.com/spreadsheet/ccc?key=0AonYZs4MzlZbdC10YS0wTFN0T0dyRDZvbjdkdV9vUVE#gid=0\">QS World University Rankings® - 2013/2014 TOP 100</a>";
+	}
+
+	@Override
 	public String getViewGUIID() {
 		return ID;
 	}

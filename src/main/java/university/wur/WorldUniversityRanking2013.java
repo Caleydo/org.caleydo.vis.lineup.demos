@@ -74,7 +74,7 @@ public class WorldUniversityRanking2013 implements IModelBuilder {
 
 		WorldUniversityYear.addYear(table, "World University Ranking", new YearGetter(0), true, false).orderByMe();
 
-		WorldUniversityYear.addSpecialYear(table, new YearGetter(0));
+		// WorldUniversityYear.addSpecialYear(table, new YearGetter(0));
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.caleydo.core.event.EventListenerManager.DeepScan;
 import org.caleydo.core.serialize.ASerializedView;
+import org.caleydo.core.util.system.BrowserUtils;
 import org.caleydo.core.view.ARcpGLElementViewPart;
 import org.caleydo.core.view.opengl.canvas.GLThreadListenerWrapper;
 import org.caleydo.core.view.opengl.canvas.IGLCanvas;
@@ -24,6 +25,11 @@ import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.ui.RankTableKeyListener;
 import org.caleydo.vis.lineup.ui.RankTableUI;
 import org.caleydo.vis.lineup.ui.RankTableUIMouseKeyListener;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Link;
 
 import demo.RankTableDemo.IModelBuilder;
 
@@ -38,12 +44,33 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 
 	@Override
 	protected AGLElementView createView(IGLCanvas canvas) {
-		return new GLView(canvas, getViewGUIID(), getViewGUIID());
+		AGLElementView v = new GLView(canvas, getViewGUIID(), getViewGUIID());
+
+		String copyright = getCopyright();
+		if (copyright != null) {
+			final Composite minSize = canvas.asComposite().getParent();
+			Composite parent = minSize.getParent();
+			parent.setLayout(new GridLayout(1, false));
+			minSize.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			Link l = new Link(parent, SWT.NONE);
+			l.setText(copyright);
+			l.addSelectionListener(BrowserUtils.LINK_LISTENER);
+			l.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+		}
+
+		return v;
+	}
+
+	/**
+	 * @return
+	 */
+	protected String getCopyright() {
+		return null;
 	}
 
 	/**
 	 * Returns the rcp-ID of the view
-	 *
+	 * 
 	 * @return rcp-ID of the view
 	 */
 	public abstract String getViewGUIID();

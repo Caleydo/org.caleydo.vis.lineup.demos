@@ -22,6 +22,11 @@ public class WorldUniversityRankingView extends ARcpRankTableDemoView {
 	}
 
 	@Override
+	protected String getCopyright() {
+		return "QS World University Rankings®";
+	}
+
+	@Override
 	public String getViewGUIID() {
 		return ID;
 	}
