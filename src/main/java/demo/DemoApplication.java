@@ -5,10 +5,6 @@
  ******************************************************************************/
 package demo;
 
-import generic.GenericView;
-import generic.ImportSpec;
-import generic.ImportWizard;
-
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.action.ContributionItem;
@@ -113,13 +109,33 @@ public class DemoApplication implements IApplication {
 		public void postWindowOpen() {
 
 			IMenuManager menuManager = getWindowConfigurer().getActionBarConfigurer().getMenuManager();
+
 			for (IContributionItem item : menuManager.getItems()) {
 
 				if (item.getId() != null && item.getId().contains("org.caleydo")
-						&& !item.getId().contains("org.caleydo.menu.window")) {
+						&& !item.getId().startsWith("org.caleydo.lineup")) {
 					menuManager.remove(item);
 				}
 			}
+
+			MenuManager menu2 = new MenuManager("&Demos", "demos");
+			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
+			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
+			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
+			menu2.add(new ShowView("World University Ranking 2013", "lineup.demo.university.wur2013", false));
+			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012", false));
+			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
+			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50", false));
+			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
+			menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl", false));
+
+			menuManager.insertAfter("org.caleydo.lineup.menu.file", menu2);
+
+			menu2 = new MenuManager("&Evaluation", "eval");
+			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012", false));
+			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
+			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
+			menuManager.insertAfter("demos", menu2);
 		}
 	}
 
@@ -131,61 +147,9 @@ public class DemoApplication implements IApplication {
 		@Override
 		protected void fillMenuBar(IMenuManager menuBar) {
 			super.fillMenuBar(menuBar);
-			MenuManager menu2 = new MenuManager("&File", "file");
-			menu2.add(new ShowWizardView());
-			menuBar.add(menu2);
-
-			menu2 = new MenuManager("&Demos", "demos");
-			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
-			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
-			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
-			menu2.add(new ShowView("World University Ranking 2013", "lineup.demo.university.wur2013", false));
-			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012", false));
-			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
-			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50", false));
-			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
-			menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl", false));
-
-			menuBar.add(menu2);
-
-			menu2 = new MenuManager("&Evaluation", "eval");
-			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012", false));
-			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
-			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
-			menuBar.add(menu2);
-		}
-
-	}
-
-	static class ShowWizardView extends ContributionItem implements SelectionListener {
-		public ShowWizardView() {
-		}
-
-		@Override
-		public void fill(Menu menu, int index) {
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("&Load Data");
-			item.addSelectionListener(this);
-		}
-
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			try {
-				ImportSpec spec = new ImportWizard().call();
-				if (spec == null)
-					return;
-				GenericView.lastSpec = spec;
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-						.showView("lineup.demo.generic", System.currentTimeMillis() + "", IWorkbenchPage.VIEW_ACTIVATE);
-			} catch (PartInitException e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
 
 		}
+
 	}
 
 	static class ShowView extends ContributionItem implements SelectionListener {
