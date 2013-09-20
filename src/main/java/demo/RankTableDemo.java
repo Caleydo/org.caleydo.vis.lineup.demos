@@ -7,6 +7,9 @@ package demo;
 
 import java.awt.Dimension;
 
+import org.caleydo.core.view.opengl.canvas.GLThreadListenerWrapper;
+import org.caleydo.core.view.opengl.canvas.IGLKeyListener;
+import org.caleydo.core.view.opengl.canvas.IGLMouseListener;
 import org.caleydo.core.view.opengl.layout2.GLElement;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.layout.GLPadding;
@@ -43,7 +46,8 @@ public class RankTableDemo extends GLSandBox {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		canvas.addKeyListener(new RankTableKeyListener(table));
+
+		canvas.addKeyListener(eventListeners.register(GLThreadListenerWrapper.wrap(new RankTableKeyListener(table))));
 		createUI();
 
 	}
@@ -61,8 +65,13 @@ public class RankTableDemo extends GLSandBox {
 		root.init(table, RankTableUIConfigs.DEFAULT, RowHeightLayouts.UNIFORM, RowHeightLayouts.FISH_EYE);
 
 		RankTableUIMouseKeyListener l = new RankTableUIMouseKeyListener(root.findBody());
-		this.canvas.addMouseListener(l);
-		canvas.addKeyListener(l);
+		IGLKeyListener key = GLThreadListenerWrapper.wrap((IGLKeyListener) l);
+		eventListeners.register(key);
+		canvas.addKeyListener(key);
+
+		IGLMouseListener mouse = GLThreadListenerWrapper.wrap((IGLMouseListener) l);
+		eventListeners.register(mouse);
+		canvas.addMouseListener(mouse);
 	}
 
 	public static float toFloat(String[] l, int i) {

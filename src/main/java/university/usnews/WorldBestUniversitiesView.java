@@ -22,6 +22,11 @@ public class WorldBestUniversitiesView extends ARcpRankTableDemoView {
 	}
 
 	@Override
+	protected String getCopyright() {
+		return "<a href=\"http://mup.asu.edu/research_data.html\">The Center for Measuring University Performance</a>";
+	}
+
+	@Override
 	public String getViewGUIID() {
 		return ID;
 	}

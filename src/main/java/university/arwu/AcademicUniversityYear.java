@@ -18,10 +18,10 @@ import org.caleydo.core.util.collection.Pair;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.AFloatFunction;
-import org.caleydo.vis.lineup.data.FloatInferrers;
-import org.caleydo.vis.lineup.data.IFloatSetterFunction;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.data.IDoubleSetterFunction;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.StackedRankColumnModel;
@@ -153,10 +153,10 @@ public class AcademicUniversityYear {
 		return stacked;
 	}
 
-	private static FloatRankColumnModel col(Function<IRow, AcademicUniversityYear> year, int col, String text,
+	private static DoubleRankColumnModel col(Function<IRow, AcademicUniversityYear> year, int col, String text,
 			String color, String bgColor) {
-		return new FloatRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
-				new Color(color), new Color(bgColor), percentage(), FloatInferrers.MEDIAN);
+		return new DoubleRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
+				new Color(color), new Color(bgColor), percentage(), DoubleInferrers.MEDIAN);
 	}
 
 	protected static PiecewiseMapping percentage() {
@@ -189,7 +189,7 @@ public class AcademicUniversityYear {
 		return data;
 	}
 
-	static class ValueGetter extends AFloatFunction<IRow> implements IFloatSetterFunction<IRow> {
+	static class ValueGetter extends ADoubleFunction<IRow> implements IDoubleSetterFunction<IRow> {
 		private final int subindex;
 		private final Function<IRow, AcademicUniversityYear> year;
 
@@ -199,10 +199,10 @@ public class AcademicUniversityYear {
 		}
 
 		@Override
-		public float applyPrimitive(IRow in) {
+		public double applyPrimitive(IRow in) {
 			AcademicUniversityYear y = year.apply(in);
 			if (y == null)
-				return Float.NaN;
+				return Double.NaN;
 			return y.get(subindex);
 		}
 

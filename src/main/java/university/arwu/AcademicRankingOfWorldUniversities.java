@@ -15,10 +15,10 @@ import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.OrderColumn;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
@@ -32,7 +32,7 @@ import com.google.common.base.Function;
 
 import demo.RankTableDemo;
 import demo.RankTableDemo.IModelBuilder;
-import demo.ReflectionFloatData;
+import demo.ReflectionDoubleData;
 
 /**
  * @author Samuel Gratzl
@@ -65,16 +65,16 @@ public class AcademicRankingOfWorldUniversities implements IModelBuilder {
 		// Arrays.asList("argu2010.txt", "argu2011.txt", "argu2012.txt");
 		table.orderBy(AcademicUniversityYear.addYear(table, "2012", new YearGetter(2)));
 
-		table.add(new FloatRankColumnModel(new ReflectionFloatData(UniversityRow.class.getDeclaredField("endowments2012")),GLRenderers.drawText("Endowment 2012", VAlign.CENTER),
+		table.add(new DoubleRankColumnModel(new ReflectionDoubleData(UniversityRow.class.getDeclaredField("endowments2012")),GLRenderers.drawText("Endowment 2012", VAlign.CENTER),
 				Color.LIGHT_GRAY, new Color(0.95f, 0.95f, .95f), new PiecewiseMapping(0, Float.NaN),
-				FloatInferrers.MEAN));
+				DoubleInferrers.MEAN));
 		table.add(new OrderColumn());
 		table.add(new RankRankColumnModel());
 		AcademicUniversityYear.addYear(table, "2011", new YearGetter(1));
-		table.add(new FloatRankColumnModel(new ReflectionFloatData(UniversityRow.class
+		table.add(new DoubleRankColumnModel(new ReflectionDoubleData(UniversityRow.class
 				.getDeclaredField("endowments2011")), GLRenderers.drawText("Endowment 2011", VAlign.CENTER),
 				Color.LIGHT_GRAY, new Color(0.95f, 0.95f, .95f), new PiecewiseMapping(0, Float.NaN),
-				FloatInferrers.MEAN));
+				DoubleInferrers.MEAN));
 		table.add(new OrderColumn());
 		table.add(new RankRankColumnModel());
 		AcademicUniversityYear.addYear(table, "2010", new YearGetter(0));

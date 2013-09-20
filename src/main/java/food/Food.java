@@ -26,13 +26,13 @@ import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.AFloatFunction;
-import org.caleydo.vis.lineup.data.FloatInferrers;
-import org.caleydo.vis.lineup.data.IFloatSetterFunction;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.data.IDoubleSetterFunction;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
@@ -124,7 +124,7 @@ public class Food implements IModelBuilder {
 
 		for (int i = 0; i < pool.size(); ++i) {
 			int j = headers.indexOf(pool.get(i));
-			FloatRankColumnModel c = ucol(j, headers.get(j), poolColors[i], scale);
+			DoubleRankColumnModel c = ucol(j, headers.get(j), poolColors[i], scale);
 			table.add(c);
 			c.hide();
 		}
@@ -265,11 +265,11 @@ public class Food implements IModelBuilder {
 		return result;
 	}
 
-	private FloatRankColumnModel ucol(int col, String label, int colorIndex, EScale scale) {
+	private DoubleRankColumnModel ucol(int col, String label, int colorIndex, EScale scale) {
 		Pair<Color, Color> pair = colors.get(colorIndex);
-		FloatRankColumnModel f = new FloatRankColumnModel(new ValueGetter(col, scale), GLRenderers.drawText(label,
+		DoubleRankColumnModel f = new DoubleRankColumnModel(new ValueGetter(col, scale), GLRenderers.drawText(label,
 				VAlign.CENTER), pair.getFirst(), pair.getSecond(), new PiecewiseMapping(0, Float.NaN),
-				FloatInferrers.fix(0));
+				DoubleInferrers.fix(0));
 		f.setWidth(75);
 		return f;
 	}
@@ -278,7 +278,7 @@ public class Food implements IModelBuilder {
 		NONE, GMWT_1, GMWT_2
 	}
 
-	static class ValueGetter extends AFloatFunction<IRow> implements IFloatSetterFunction<IRow> {
+	static class ValueGetter extends ADoubleFunction<IRow> implements IDoubleSetterFunction<IRow> {
 		private final int index;
 		private EScale scaled;
 
@@ -288,10 +288,10 @@ public class Food implements IModelBuilder {
 		}
 
 		@Override
-		public float applyPrimitive(IRow in) {
+		public double applyPrimitive(IRow in) {
 			FoodRow r = (FoodRow) in;
 			if (r.data.length <= index)
-				return Float.NaN;
+				return Double.NaN;
 			float v = r.data[index];
 			switch(scaled) {
 			case NONE:
@@ -313,7 +313,7 @@ public class Food implements IModelBuilder {
 			case GMWT_2:
 				return v * (r.GmWt_2 / 100);
 			}
-			return Float.NaN;
+			return Double.NaN;
 		}
 
 		@Override

@@ -27,6 +27,13 @@
       <view
             allowMultiple="true"
             category="org.caleydo.core.views"
+            class="university.wur.WorldUniversityRanking2013View"
+            id="lineup.demo.university.wur2013"
+            name="World University Ranking 2013">
+      </view>
+      <view
+            allowMultiple="true"
+            category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRankingEvaluation1View"
             id="lineup.eval.university.wur2012"
             name="World University Ranking 2012">
@@ -118,5 +125,75 @@
                value="platform:/plugin/org.caleydo.core/resources/icons/caleydo_16.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_32.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_48.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_64.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_128.png">
          </property>
       </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="org.caleydo.lineup.menu.file"
+               label="File">
+            <command
+                  commandId="org.caleydo.vis.lineup.demos.showwizard"
+                  label="&amp;Load Data"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  label="Preferences"
+                  mnemonic="P"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.core.startup.exit"
+                  label="Exit"
+                  mnemonic="E"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="org.caleydo.lineup.menu.window"
+               label="Window">
+            <command
+                  commandId="org.caleydo.core.gui.fullscreen"
+                  label="Full Screen"
+                  mnemonic="F"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="org.caleydo.lineup.menu.help"
+               label="Help"
+               tooltip="Help">
+            <command
+                  commandId="org.caleydo.core.gui.menu.help_contents"
+                  label="Help Contents"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.core.gui.menu.known_bugs"
+                  label="Known Bugs"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.core.gui.menu.report_bug"
+                  label="Report Bug"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.eclipse.ui.help.aboutAction"
+                  label="About Caleydo"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="demo.handler.ShowWizardHandler"
+            id="org.caleydo.vis.lineup.demos.showwizard"
+            name="Load &amp;Data">
+      </command>
    </extension>
 </plugin>

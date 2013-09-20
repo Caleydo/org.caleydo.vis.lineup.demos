@@ -26,7 +26,7 @@ import org.caleydo.core.io.gui.dataimport.widget.LoadFileWidget;
 import org.caleydo.core.util.base.ICallback;
 import org.caleydo.core.util.color.ColorBrewer;
 import org.caleydo.core.util.execution.SafeCallable;
-import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
@@ -506,8 +506,8 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			combo = new Combo(parent, SWT.READ_ONLY | SWT.DROP_DOWN);
 			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			combo.setItems(new String[] { "NaN", "Mean", "Median" });
-			combo.setText(col.inferer == FloatInferrers.MEAN ? "Mean"
-					: (col.inferer == FloatInferrers.MEDIAN ? "Median" : "NaN"));
+			combo.setText(col.inferer == DoubleInferrers.MEAN ? "Mean"
+					: (col.inferer == DoubleInferrers.MEDIAN ? "Median" : "NaN"));
 			return parent;
 		}
 
@@ -516,13 +516,13 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			col.mapping = new PiecewiseMapping(toFloat(minUI), toFloat(maxUI));
 			switch (combo.getText()) {
 			case "NaN":
-				col.inferer = FloatInferrers.fix(Float.NaN);
+				col.inferer = DoubleInferrers.fix(Float.NaN);
 				break;
 			case "Mean":
-				col.inferer = FloatInferrers.MEAN;
+				col.inferer = DoubleInferrers.MEAN;
 				break;
 			case "Median":
-				col.inferer = FloatInferrers.MEDIAN;
+				col.inferer = DoubleInferrers.MEDIAN;
 				break;
 			}
 			super.okPressed();

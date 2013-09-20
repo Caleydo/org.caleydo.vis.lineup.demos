@@ -22,6 +22,11 @@ public class Top100Under50View extends ARcpRankTableDemoView {
 	}
 
 	@Override
+	protected String getCopyright() {
+		return "<a href=\"http://www.timeshighereducation.co.uk/world-university-rankings/2012/one-hundred-under-fifty\">Times Higher Education 100 Under 50</a>";
+	}
+
+	@Override
 	public String getViewGUIID() {
 		return ID;
 	}

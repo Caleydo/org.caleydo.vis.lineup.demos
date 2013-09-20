@@ -16,7 +16,7 @@ import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.FloatInferrers;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
@@ -68,7 +68,7 @@ public class Top100Under50 implements IModelBuilder {
 		table.add(new StringRankColumnModel(GLRenderers.drawText("Location", VAlign.CENTER),
 				new ReflectionData<String>(field("location"), String.class)));
 
-		Top100Under50Year.addYear(table, "2012", new YearGetter(0), FloatInferrers.MEDIAN);
+		Top100Under50Year.addYear(table, "2012", new YearGetter(0), DoubleInferrers.MEDIAN);
 
 		// table.add(new OrderColumn());
 		// table.add(new RankRankColumnModel());

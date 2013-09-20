@@ -17,11 +17,11 @@ import java.util.Map;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.data.AFloatFunction;
-import org.caleydo.vis.lineup.data.FloatInferrers;
-import org.caleydo.vis.lineup.data.IFloatInferrer;
-import org.caleydo.vis.lineup.data.IFloatSetterFunction;
-import org.caleydo.vis.lineup.model.FloatRankColumnModel;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.data.IDoubleInferrer;
+import org.caleydo.vis.lineup.data.IDoubleSetterFunction;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.StackedRankColumnModel;
@@ -114,7 +114,7 @@ public class Top100Under50Year {
 	 * @param table
 	 */
 	public static StackedRankColumnModel addYear(RankTableModel table, String title,
-			final Function<IRow, Top100Under50Year> map, IFloatInferrer inf) {
+			final Function<IRow, Top100Under50Year> map, IDoubleInferrer inf) {
 		final StackedRankColumnModel stacked = new StackedRankColumnModel();
 		stacked.setTitle(title);
 		table.add(stacked);
@@ -136,13 +136,13 @@ public class Top100Under50Year {
 	}
 
 	public static void addOverallYear(RankTableModel table, String title, Function<IRow, Top100Under50Year> map) {
-		table.add(col(map, COL_overall, title, "#DFC27D", "#F6E8C3", FloatInferrers.MEDIAN));
+		table.add(col(map, COL_overall, title, "#DFC27D", "#F6E8C3", DoubleInferrers.MEDIAN));
 	}
 
-	private static FloatRankColumnModel col(Function<IRow, Top100Under50Year> year, int col, String text,
+	private static DoubleRankColumnModel col(Function<IRow, Top100Under50Year> year, int col, String text,
  String color,
-			String bgColor, IFloatInferrer inf) {
-		return new FloatRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
+			String bgColor, IDoubleInferrer inf) {
+		return new DoubleRankColumnModel(new ValueGetter(year, col), GLRenderers.drawText(text, VAlign.CENTER),
 				new Color(color), new Color(bgColor), percentage(), inf);
 	}
 
@@ -180,7 +180,7 @@ public class Top100Under50Year {
 		return data;
 	}
 
-	static class ValueGetter extends AFloatFunction<IRow> implements IFloatSetterFunction<IRow> {
+	static class ValueGetter extends ADoubleFunction<IRow> implements IDoubleSetterFunction<IRow> {
 		private final int subindex;
 		private final Function<IRow, Top100Under50Year> year;
 
@@ -190,10 +190,10 @@ public class Top100Under50Year {
 		}
 
 		@Override
-		public float applyPrimitive(IRow in) {
+		public double applyPrimitive(IRow in) {
 			Top100Under50Year y = year.apply(in);
 			if (y == null)
-				return Float.NaN;
+				return Double.NaN;
 			return y.get(subindex);
 		}
 
