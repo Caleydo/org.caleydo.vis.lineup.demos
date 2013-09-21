@@ -5,7 +5,7 @@
  ******************************************************************************/
 package university.top100under50;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,29 +42,29 @@ public class Top100Under50Year {
 	public static final int COL_internationalMix = 5;
 	public static final int COL_overall = 6;
 
-	private float ranking;
-	private float teaching;
-	private float research;
-	private float citations;
-	private float incomeFromIndustry;
-	private float internationalMix;
-	private float overall;
+	private double ranking;
+	private double teaching;
+	private double research;
+	private double citations;
+	private double incomeFromIndustry;
+	private double internationalMix;
+	private double overall;
 
 	// 100 Under 50 rank World University Rankings 2011-2012 position Institution Lat, long Country Year founded
 	// Teaching Research Citations Income from Industry International mix Overall score
 
 
 	public Top100Under50Year(String[] l) {
-		ranking = toFloat(l, 0);
-		teaching = toFloat(l, 6);
-		research = toFloat(l, 7);
-		citations = toFloat(l, 8);
-		incomeFromIndustry = toFloat(l, 9);
-		internationalMix = toFloat(l, 10);
-		overall = toFloat(l, 11);
+		ranking = toDouble(l, 0);
+		teaching = toDouble(l, 6);
+		research = toDouble(l, 7);
+		citations = toDouble(l, 8);
+		incomeFromIndustry = toDouble(l, 9);
+		internationalMix = toDouble(l, 10);
+		overall = toDouble(l, 11);
 	}
 
-	public float get(int index) {
+	public double get(int index) {
 		switch (index) {
 		case COL_ranking:
 			return ranking;
@@ -84,7 +84,7 @@ public class Top100Under50Year {
 		return 0;
 	}
 
-	public void set(int index, float value) {
+	public void set(int index, double value) {
 		switch (index) {
 		case COL_ranking:
 			ranking = value;
@@ -198,7 +198,7 @@ public class Top100Under50Year {
 		}
 
 		@Override
-		public void set(IRow in, float value) {
+		public void set(IRow in, double value) {
 			Top100Under50Year y = year.apply(in);
 			if (y == null)
 				return;

@@ -5,7 +5,7 @@
  ******************************************************************************/
 package university.arwu;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,29 +46,29 @@ public class AcademicUniversityYear {
 	public static final int COL_pub = 7;
 	public static final int COL_pcb = 8;
 
-	private float ranking;
-	private float national;
-	private float total;
-	private float alumini;
-	private float award;
-	private float hici;
-	private float nands;
-	private float pub;
-	private float pcb;
+	private double ranking;
+	private double national;
+	private double total;
+	private double alumini;
+	private double award;
+	private double hici;
+	private double nands;
+	private double pub;
+	private double pcb;
 
 	public AcademicUniversityYear(String[] l) {
-		ranking = toFloat(l, 0);
-		national = toFloat(l, 3);
-		total = toFloat(l, 4);
-		alumini = toFloat(l, 5);
-		award = toFloat(l, 6);
-		hici = toFloat(l, 7);
-		nands = toFloat(l, 8);
-		pub = toFloat(l, 9);
-		pcb = toFloat(l, 10);
+		ranking = toDouble(l, 0);
+		national = toDouble(l, 3);
+		total = toDouble(l, 4);
+		alumini = toDouble(l, 5);
+		award = toDouble(l, 6);
+		hici = toDouble(l, 7);
+		nands = toDouble(l, 8);
+		pub = toDouble(l, 9);
+		pcb = toDouble(l, 10);
 	}
 
-	public float get(int index) {
+	public double get(int index) {
 		switch (index) {
 		case COL_ranking:
 			return ranking;
@@ -92,7 +92,7 @@ public class AcademicUniversityYear {
 		return 0;
 	}
 
-	public float set(int index, float value) {
+	public double set(int index, double value) {
 		switch (index) {
 		case COL_ranking:
 			return ranking = value;
@@ -207,7 +207,7 @@ public class AcademicUniversityYear {
 		}
 
 		@Override
-		public void set(IRow in, float value) {
+		public void set(IRow in, double value) {
 			AcademicUniversityYear y = year.apply(in);
 			if (y == null)
 				return;

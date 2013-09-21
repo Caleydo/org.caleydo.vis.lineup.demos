@@ -5,7 +5,7 @@
  ******************************************************************************/
 package nasatxl;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -116,13 +116,13 @@ public class NASATxlResults implements IModelBuilder {
 				NASATxlTest row = new NASATxlTest();
 				// row.rank = Integer.parseInt(l[0]);
 				row.task = Integer.parseInt(l[0]);
-				row.time = toFloat(l, 2);
-				row.mental_demand = toFloat(l, 3);
-				row.physical_demand = toFloat(l, 4);
-				row.temporal_demand = toFloat(l, 5);
-				row.performance = toFloat(l, 6);
-				row.effort = toFloat(l, 7);
-				row.frustration = toFloat(l, 8);
+				row.time = toDouble(l, 2);
+				row.mental_demand = toDouble(l, 3);
+				row.physical_demand = toDouble(l, 4);
+				row.temporal_demand = toDouble(l, 5);
+				row.performance = toDouble(l, 6);
+				row.effort = toDouble(l, 7);
+				row.frustration = toDouble(l, 8);
 				rows.add(row);
 			}
 		}
@@ -150,13 +150,13 @@ public class NASATxlResults implements IModelBuilder {
 
 	static class NASATxlTest extends ARow {
 		public int task;
-		public float mental_demand;
-		public float physical_demand;
-		public float temporal_demand;
-		public float performance;
-		public float effort;
-		public float frustration;
-		public float time;
+		public double mental_demand;
+		public double physical_demand;
+		public double temporal_demand;
+		public double performance;
+		public double effort;
+		public double frustration;
+		public double time;
 
 		@Override
 		public String toString() {

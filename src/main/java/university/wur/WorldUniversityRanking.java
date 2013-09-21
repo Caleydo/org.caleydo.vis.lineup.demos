@@ -153,10 +153,10 @@ public class WorldUniversityRanking implements IModelBuilder {
 		}
 	}
 
-	private static CharSequence toString(float f) {
-		if (Float.isNaN(f))
+	private static CharSequence toString(double f) {
+		if (Double.isNaN(f))
 			return "";
-		return Float.toString(f);
+		return Double.toString(f);
 	}
 
 	static class YearGetter implements Function<IRow, WorldUniversityYear> {
