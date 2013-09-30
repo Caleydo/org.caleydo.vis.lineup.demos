@@ -7,7 +7,8 @@ package generic;
 
 import generic.ImportSpec.CategoricalColumnSpec;
 import generic.ImportSpec.ColumnSpec;
-import generic.ImportSpec.FloatColumnSpec;
+import generic.ImportSpec.DateColumnSpec;
+import generic.ImportSpec.DoubleColumnSpec;
 import generic.ImportSpec.IntegerColumnSpec;
 import generic.ImportSpec.StringColumnSpec;
 
@@ -18,7 +19,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.caleydo.core.io.gui.dataimport.PreviewTable;
 import org.caleydo.core.io.gui.dataimport.PreviewTable.IPreviewCallback;
 import org.caleydo.core.io.gui.dataimport.widget.LabelWidget;
@@ -27,11 +32,14 @@ import org.caleydo.core.util.base.ICallback;
 import org.caleydo.core.util.color.ColorBrewer;
 import org.caleydo.core.util.execution.SafeCallable;
 import org.caleydo.vis.lineup.data.DoubleInferrers;
+import org.caleydo.vis.lineup.model.DateRankColumnModel.DateMode;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
@@ -49,6 +57,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -104,7 +113,6 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 		return true;
 	}
 
-
 	@Override
 	public ImportSpec call() {
 		WizardDialog d = new WizardDialog(null, this);
@@ -122,8 +130,6 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 
 		private LabelWidget label;
 
-		private LoadFileWidget loadFile;
-
 		protected PreviewTable previewTable;
 
 		public ImportDataPage() {
@@ -131,7 +137,6 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			setDescription("Select the data file to import");
 			setPageComplete(false);
 		}
-
 
 		@Override
 		public void createControl(Composite parent) {
@@ -145,7 +150,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			gd.heightHint = 670;
 			parentComposite.setLayoutData(gd);
 
-			loadFile = new LoadFileWidget(parentComposite, "Open Score File", new ICallback<String>() {
+			LoadFileWidget loadFile = new LoadFileWidget(parentComposite, "Open Score File", new ICallback<String>() {
 				@Override
 				public void on(String data) {
 					onSelectFile(data);
@@ -193,8 +198,10 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 		protected void save() {
 			List<Integer> selectedColumns = new ArrayList<Integer>(this.previewTable.getSelectedColumns());
 			List<ColumnSpec> cols = new ArrayList<>();
+			data = previewTable.getDataMatrix();
+
 			for (Integer col : selectedColumns)
-				cols.add(new StringColumnSpec(col));
+				cols.add(guessType(col, data));
 			spec.setColumns(cols);
 			spec.setLabel(this.label.getText());
 			SortedSet<Integer> sizes = ColorBrewer.Set3.getSizes();
@@ -204,7 +211,41 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 					cols.get(i).color = colors.get(i);
 				}
 			}
-			data = previewTable.getDataMatrix();
+		}
+
+		/**
+		 * @param list
+		 * @return
+		 */
+		private ColumnSpec guessType(int col, List<List<String>> data) {
+			int i = 0;
+			int f = 0;
+			int d = 0;
+			int nan = 0;
+			final int size = Math.min(data.size(), 50); // guess the first 50 values
+
+			for (int k = 1; k < size; ++k) {
+				String v = data.get(k).get(col);
+				if (StringUtils.isBlank(v) || "NA".equalsIgnoreCase(v)) {// skip blank
+					nan++;
+					continue;
+				}
+				if (NumberUtils.isDigits(v)) {
+					i++;
+					f++;
+				} else if (!Double.isNaN(NumberUtils.toDouble(v, Double.NaN)))
+					f++;
+				else if (Pattern.matches("[ \\d:\\-_]+", v))
+					d++;
+			}
+			final int valid = size - nan - 1;
+			if (f >= valid * 0.9) // more than 90% doubles
+				return new DoubleColumnSpec().setCol(col);
+			if (i >= valid * 0.9)
+				return new IntegerColumnSpec().setCol(col);
+			if (d >= valid * 0.9)
+				return new DateColumnSpec().setCol(col);
+			return new StringColumnSpec(col);
 		}
 
 		@Override
@@ -257,8 +298,8 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			col.setEditingSupport(new EditingSupport(tableViewer) {
 				@Override
 				protected CellEditor getCellEditor(Object element) {
-					return new ComboBoxCellEditor(table, new String[] { "String", "Float", "Integer", "Categorical" },
-							SWT.DROP_DOWN | SWT.READ_ONLY);
+					return new ComboBoxCellEditor(table, new String[] { "String", "Double", "Integer", "Categorical",
+							"Date" }, SWT.DROP_DOWN | SWT.READ_ONLY);
 				}
 
 				@Override
@@ -268,12 +309,14 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 
 				@Override
 				protected Object getValue(Object element) {
-					if (element instanceof FloatColumnSpec)
+					if (element instanceof DoubleColumnSpec)
 						return 1;
 					if (element instanceof IntegerColumnSpec)
 						return 2;
 					if (element instanceof CategoricalColumnSpec)
 						return 3;
+					if (element instanceof DateColumnSpec)
+						return 4;
 					return 0;
 				}
 
@@ -286,10 +329,13 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 						new_ = new IntegerColumnSpec();
 						break;
 					case 1:
-						new_ = new FloatColumnSpec();
+						new_ = new DoubleColumnSpec();
 						break;
 					case 3:
 						new_ = new CategoricalColumnSpec(toSet(old.col));
+						break;
+					case 4:
+						new_ = new DateColumnSpec();
 						break;
 					default:
 						new_ = new StringColumnSpec(old.col);
@@ -386,24 +432,40 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			col.setLabelProvider(new ColumnLabelProvider() {
 				@Override
 				public String getText(Object element) {
-					if (element instanceof FloatColumnSpec) {
-						FloatColumnSpec s = (FloatColumnSpec) element;
+					if (element instanceof DoubleColumnSpec) {
+						DoubleColumnSpec s = (DoubleColumnSpec) element;
 						StringBuilder b = new StringBuilder();
-						b.append(s.mapping.getFromMin()).append("...").append(s.mapping.getFromMax());
+						b.append(toString(s.mapping.getFromMin())).append("...")
+								.append(toString(s.mapping.getFromMax()));
 						return b.toString();
+					} else if (element instanceof DateColumnSpec) {
+						DateColumnSpec s = (DateColumnSpec) element;
+						return WordUtils.capitalizeFully(s.getMode().name());
 					}
 					return "";
+				}
+
+				private Object toString(double v) {
+					if (Double.isNaN(v))
+						return "Inferred";
+					return String.valueOf(v);
 				}
 			});
 			col.setEditingSupport(new EditingSupport(tableViewer) {
 				@Override
-				protected CellEditor getCellEditor(Object element) {
+				protected CellEditor getCellEditor(final Object element) {
 					return new DialogCellEditor(table) {
-
 						@Override
 						protected Object openDialogBox(Control cellEditorWindow) {
-							FloatPropertyDialog dialog = new FloatPropertyDialog(cellEditorWindow.getShell(),
-									(FloatColumnSpec) getValue());
+							Dialog dialog;
+							if (element instanceof DoubleColumnSpec)
+								dialog = new FloatPropertyDialog(cellEditorWindow.getShell(),
+										(DoubleColumnSpec) getValue());
+							else if (element instanceof DateColumnSpec)
+								dialog = new DatePropertyDialog(cellEditorWindow.getShell(),
+										(DateColumnSpec) getValue());
+							else
+								return null;
 							dialog.open();
 							return getValue();
 						}
@@ -412,7 +474,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 
 				@Override
 				protected boolean canEdit(Object element) {
-					return (element instanceof FloatColumnSpec);
+					return (element instanceof DoubleColumnSpec) || (element instanceof DateColumnSpec);
 				}
 
 				@Override
@@ -426,7 +488,6 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 					tableViewer.update(element, null);
 				}
 			});
-
 
 			tableViewer.setContentProvider(ArrayContentProvider.getInstance());
 
@@ -473,14 +534,14 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 	}
 
 	class FloatPropertyDialog extends Dialog {
-		private FloatColumnSpec col;
+		private DoubleColumnSpec col;
 		private Text minUI, maxUI;
 		private Combo combo;
 
 		/**
 		 *
 		 */
-		public FloatPropertyDialog(Shell shell, FloatColumnSpec spec) {
+		public FloatPropertyDialog(Shell shell, DoubleColumnSpec spec) {
 			super(shell);
 			this.col = spec;
 		}
@@ -493,13 +554,22 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			l.setText("Mapping Min:");
 			minUI = new Text(parent, SWT.BORDER);
 			minUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			minUI.setText(col.mapping.getFromMin() + "");
+			minUI.setText(Double.isNaN(col.mapping.getFromMin()) ? "" : String.valueOf(col.mapping.getFromMin()));
+			final Image image = FieldDecorationRegistry.getDefault()
+					.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage();
+
+			ControlDecoration deco = new ControlDecoration(minUI, SWT.TOP | SWT.LEFT);
+			deco.setDescriptionText("Leave empty to use the minimal value from the data");
+			deco.setImage(image);
 
 			l = new Label(parent, SWT.NONE);
 			l.setText("Mapping Max:");
 			maxUI = new Text(parent, SWT.BORDER);
 			maxUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			maxUI.setText(col.mapping.getFromMax() + "");
+			maxUI.setText(Double.isNaN(col.mapping.getFromMax()) ? "" : String.valueOf(col.mapping.getFromMax()));
+			deco = new ControlDecoration(maxUI, SWT.TOP | SWT.LEFT);
+			deco.setDescriptionText("Leave empty to use the maximal value from the data");
+			deco.setImage(image);
 
 			l = new Label(parent, SWT.NONE);
 			l.setText("Missing Value Replacement:");
@@ -535,6 +605,64 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 		private float toFloat(Text t) {
 			String s = t.getText().trim();
 			return s.isEmpty() ? Float.NaN : Float.parseFloat(s);
+		}
+	}
+
+	class DatePropertyDialog extends Dialog {
+		private DateColumnSpec col;
+		private Text patternUI;
+		private Combo combo;
+
+		/**
+		 *
+		 */
+		public DatePropertyDialog(Shell shell, DateColumnSpec spec) {
+			super(shell);
+			this.col = spec;
+		}
+
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			parent = new Composite(parent, SWT.NONE);
+			parent.setLayout(new GridLayout(2, false));
+			Label l = new Label(parent, SWT.NONE);
+			l.setText("Parsing Pattern:");
+			patternUI = new Text(parent, SWT.BORDER);
+			patternUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			patternUI.setText(col.getPattern());
+
+			final Image image = FieldDecorationRegistry.getDefault()
+					.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage();
+
+			ControlDecoration deco = new ControlDecoration(patternUI, SWT.TOP | SWT.LEFT);
+			deco.setDescriptionText("Patterns as defined in java.text.SimpleDateFormat.java.");
+			deco.setImage(image);
+
+			l = new Label(parent, SWT.NONE);
+			l.setText("Output Format:");
+			combo = new Combo(parent, SWT.READ_ONLY | SWT.DROP_DOWN);
+			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			combo.setItems(new String[] { "Date", "Date Time", "Time" });
+			combo.setText(col.getMode() == DateMode.DATE ? "Date" : (col.getMode() == DateMode.DATE_TIME ? "Date Time"
+					: "Time"));
+			return parent;
+		}
+
+		@Override
+		protected void okPressed() {
+			col.setPattern(patternUI.getText());
+			switch (combo.getText()) {
+			case "Date":
+				col.setMode(DateMode.DATE);
+				break;
+			case "Date Time":
+				col.setMode(DateMode.DATE_TIME);
+				break;
+			case "Time":
+				col.setMode(DateMode.TIME);
+				break;
+			}
+			super.okPressed();
 		}
 	}
 }

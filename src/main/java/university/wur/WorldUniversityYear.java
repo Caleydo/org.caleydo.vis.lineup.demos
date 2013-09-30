@@ -5,7 +5,7 @@
  ******************************************************************************/
 package university.wur;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -51,37 +51,37 @@ public class WorldUniversityYear {
 	public static final int COL_natural = 11;
 	public static final int COL_social = 12;
 
-	private float qsstars;
-	private float overall;
-	private float academic;
-	private float employer;
-	private float faculty;
-	private float international;
-	private float internationalstudents;
-	private float citations;
-	private float arts;
-	private float engineering;
-	private float life;
-	private float natural;
-	private float social;
+	private double qsstars;
+	private double overall;
+	private double academic;
+	private double employer;
+	private double faculty;
+	private double international;
+	private double internationalstudents;
+	private double citations;
+	private double arts;
+	private double engineering;
+	private double life;
+	private double natural;
+	private double social;
 
 	public WorldUniversityYear(String[] l) {
-		qsstars = toFloat(l, 2);
-		overall = toFloat(l, 3);
-		academic = toFloat(l, 4);
-		employer = toFloat(l, 5);
-		faculty = toFloat(l, 6);
-		international = toFloat(l, 7);
-		internationalstudents = toFloat(l, 8);
-		citations = toFloat(l, 9);
-		arts = toFloat(l, 10);
-		engineering = toFloat(l, 11);
-		life = toFloat(l, 12);
-		natural = toFloat(l, 13);
-		social = toFloat(l, 14);
+		qsstars = toDouble(l, 2);
+		overall = toDouble(l, 3);
+		academic = toDouble(l, 4);
+		employer = toDouble(l, 5);
+		faculty = toDouble(l, 6);
+		international = toDouble(l, 7);
+		internationalstudents = toDouble(l, 8);
+		citations = toDouble(l, 9);
+		arts = toDouble(l, 10);
+		engineering = toDouble(l, 11);
+		life = toDouble(l, 12);
+		natural = toDouble(l, 13);
+		social = toDouble(l, 14);
 	}
 
-	public float get(int index) {
+	public double get(int index) {
 		switch (index) {
 		case COL_academic:
 			return academic;
@@ -113,7 +113,7 @@ public class WorldUniversityYear {
 		return Float.NaN;
 	}
 
-	public void set(int index, float value) {
+	public void set(int index, double value) {
 		switch (index) {
 		case COL_academic:
 			academic = value;
@@ -301,7 +301,7 @@ public class WorldUniversityYear {
 		}
 
 		@Override
-		public void set(IRow in, float value) {
+		public void set(IRow in, double value) {
 			WorldUniversityYear y = year.apply(in);
 			if (y == null)
 				return;

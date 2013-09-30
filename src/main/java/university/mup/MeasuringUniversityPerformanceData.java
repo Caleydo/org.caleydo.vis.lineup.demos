@@ -5,7 +5,7 @@
  ******************************************************************************/
 package university.mup;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,12 +42,12 @@ public class MeasuringUniversityPerformanceData {
 	// 2005_ControlRank
 
 	public static class Entry {
-		public float value;
+		public double value;
 		public int nationalRank;
 		public int controlRank;
 
 		public Entry(String[] l, int offset) {
-			value = toFloat(l, offset++);
+			value = toDouble(l, offset++);
 			nationalRank = toInt(l, offset++);
 			controlRank = toInt(l, offset++);
 		}

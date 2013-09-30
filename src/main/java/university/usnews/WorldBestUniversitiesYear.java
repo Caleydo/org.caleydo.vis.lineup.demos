@@ -5,7 +5,7 @@
  ******************************************************************************/
 package university.usnews;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,27 +40,27 @@ public class WorldBestUniversitiesYear {
 	public static final int COL_internationalstudents = 6;
 	public static final int COL_citations = 7;
 
-	private final float overall;
-	private final float academic;
-	private final float employer;
-	private final float faculty;
-	private final float international;
-	private final float internationalstudents;
-	private final float citations;
+	private final double overall;
+	private final double academic;
+	private final double employer;
+	private final double faculty;
+	private final double international;
+	private final double internationalstudents;
+	private final double citations;
 
 	public WorldBestUniversitiesYear(String[] l) {
 		// Rank;School;Country;Overall Score;Academic Reputation Score;Employer Reputation Score;Faculty-Student Ratio
 		// Score;International Faculty Score;International Students Score;Citations per Faculty Score
-		overall = toFloat(l, 3);
-		academic = toFloat(l, 4);
-		employer = toFloat(l, 5);
-		faculty = toFloat(l, 6);
-		international = toFloat(l, 7);
-		internationalstudents = toFloat(l, 8);
-		citations = toFloat(l, 9);
+		overall = toDouble(l, 3);
+		academic = toDouble(l, 4);
+		employer = toDouble(l, 5);
+		faculty = toDouble(l, 6);
+		international = toDouble(l, 7);
+		internationalstudents = toDouble(l, 8);
+		citations = toDouble(l, 9);
 	}
 
-	public float get(int index) {
+	public double get(int index) {
 		switch (index) {
 		case COL_academic:
 			return academic;

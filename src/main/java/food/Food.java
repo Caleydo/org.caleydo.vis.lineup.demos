@@ -5,7 +5,7 @@
  ******************************************************************************/
 package food;
 
-import static demo.RankTableDemo.toFloat;
+import static demo.RankTableDemo.toDouble;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -178,16 +178,16 @@ public class Food implements IModelBuilder {
 				String[] l = line.split("\t");
 				FoodRow row = rows.get(i);
 				row.NDB_No = Integer.parseInt(l[0]);
-				row.data = new float[l.length - 2 - 5];
+				row.data = new double[l.length - 2 - 5];
 				for (int i1 = 0; i1 < row.data.length; ++i1) {
-					row.data[i1] = toFloat(l, i1 + 2);
+					row.data[i1] = toDouble(l, i1 + 2);
 				}
-				row.GmWt_1 = toFloat(l, l.length - 5);
-				if (Float.isNaN(row.GmWt_1))
+				row.GmWt_1 = toDouble(l, l.length - 5);
+				if (Double.isNaN(row.GmWt_1))
 					row.GmWt_1 = 100;
 				row.GmWt_Desc1 = l[l.length - 4];
-				row.GmWt_2 = toFloat(l, l.length - 3);
-				if (Float.isNaN(row.GmWt_2))
+				row.GmWt_2 = toDouble(l, l.length - 3);
+				if (Double.isNaN(row.GmWt_2))
 					row.GmWt_2 = 100;
 				row.GmWt_Desc2 = l[l.length - 2];
 			}
@@ -213,7 +213,7 @@ public class Food implements IModelBuilder {
 			w.println();
 
 			for (FoodRow row : rows) {
-				float f = row.GmWt_1 / 100;
+				double f = row.GmWt_1 / 100;
 				w.append(row.description).append(SEP).append(foodGroups.get(row.group));
 				w.append(SEP).append(row.GmWt_Desc1);
 
@@ -230,10 +230,10 @@ public class Food implements IModelBuilder {
 		}
 	}
 
-	private static CharSequence toString(float f) {
-		if (Float.isNaN(f))
+	private static CharSequence toString(double f) {
+		if (Double.isNaN(f))
 			return "";
-		return Float.toString(f);
+		return Double.toString(f);
 	}
 
 	/**
@@ -292,7 +292,7 @@ public class Food implements IModelBuilder {
 			FoodRow r = (FoodRow) in;
 			if (r.data.length <= index)
 				return Double.NaN;
-			float v = r.data[index];
+			double v = r.data[index];
 			switch(scaled) {
 			case NONE:
 				return v;
@@ -317,7 +317,7 @@ public class Food implements IModelBuilder {
 		}
 
 		@Override
-		public void set(IRow in, float value) {
+		public void set(IRow in, double value) {
 			FoodRow r = (FoodRow) in;
 			if (r.data.length <= index)
 				return;
@@ -330,13 +330,13 @@ public class Food implements IModelBuilder {
 		public int NDB_No;
 		public int group;
 		public String description;
-		public float[] data;
+		public double[] data;
 
 		public String GmWt_Desc1;
-		public float GmWt_1 = 100;
+		public double GmWt_1 = 100;
 
 		public String GmWt_Desc2;
-		public float GmWt_2 = 100;
+		public double GmWt_2 = 100;
 
 		@Override
 		public String toString() {

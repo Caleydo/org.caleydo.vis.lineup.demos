@@ -5,6 +5,7 @@
  *******************************************************************************/
 package generic;
 
+import java.util.Date;
 import java.util.Objects;
 
 import org.caleydo.vis.lineup.data.ADoubleFunction;
@@ -27,11 +28,11 @@ public class GenericRow extends ARow {
 		this.data = data;
 	}
 
-	public float getFloat(int index) {
+	public double getDouble(int index) {
 		Object r = get(index);
-		if (r instanceof Float)
-			return ((Float) r).floatValue();
-		return Float.NaN;
+		if (r instanceof Double)
+			return ((Double) r).floatValue();
+		return Double.NaN;
 	}
 
 	public Object get(int index) {
@@ -47,20 +48,27 @@ public class GenericRow extends ARow {
 		return -1;
 	}
 
+	public Date getDate(int index) {
+		Object r = get(index);
+		if (r instanceof Date)
+			return ((Date) r);
+		return null;
+	}
+
 	public String getString(int index) {
 		return Objects.toString(get(index), "");
 	}
 
-	public static class FloatGetter extends ADoubleFunction<IRow> {
+	public static class DoubleGetter extends ADoubleFunction<IRow> {
 		private final int index;
 
-		public FloatGetter(int index) {
+		public DoubleGetter(int index) {
 			this.index = index;
 		}
 
 		@Override
 		public double applyPrimitive(IRow in) {
-			return ((GenericRow) in).getFloat(index);
+			return ((GenericRow) in).getDouble(index);
 		}
 	}
 
@@ -87,6 +95,19 @@ public class GenericRow extends ARow {
 		@Override
 		public Integer apply(IRow in) {
 			return ((GenericRow) in).getInt(index);
+		}
+	}
+
+	public static class DateGetter implements Function<IRow, Date> {
+		private final int index;
+
+		public DateGetter(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public Date apply(IRow in) {
+			return ((GenericRow) in).getDate(index);
 		}
 	}
 }

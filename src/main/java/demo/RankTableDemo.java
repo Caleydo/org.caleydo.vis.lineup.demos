@@ -7,6 +7,7 @@ package demo;
 
 import java.awt.Dimension;
 
+import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.view.opengl.canvas.GLThreadListenerWrapper;
 import org.caleydo.core.view.opengl.canvas.IGLKeyListener;
 import org.caleydo.core.view.opengl.canvas.IGLMouseListener;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
  *
  */
 public class RankTableDemo extends GLSandBox {
+	private final static Logger log = Logger.create(RankTableDemo.class);
 
 	protected final RankTableModel table;
 
@@ -44,7 +46,7 @@ public class RankTableDemo extends GLSandBox {
 		try {
 			builder.apply(table);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			log.error("can't build demo table", e1);
 		}
 
 		canvas.addKeyListener(eventListeners.register(GLThreadListenerWrapper.wrap(new RankTableKeyListener(table))));
@@ -74,20 +76,20 @@ public class RankTableDemo extends GLSandBox {
 		canvas.addMouseListener(mouse);
 	}
 
-	public static float toFloat(String[] l, int i) {
+	public static double toDouble(String[] l, int i) {
 		if (i >= l.length)
-			return Float.NaN;
+			return Double.NaN;
 		String v = l[i].trim();
 		if (v.equalsIgnoreCase("-") || v.isEmpty() || v.equalsIgnoreCase("-"))
-			return Float.NaN;
+			return Double.NaN;
 		int p = v.indexOf('-');
 		if (p > 0 && v.charAt(p - 1) != 'e' && v.charAt(p - 1) != 'E')
 			v = v.substring(0, p);
 		try {
-			return Float.parseFloat(v);
+			return Double.parseDouble(v);
 		} catch(NumberFormatException e) {
-			System.err.println("parse error: "+v);
-			return Float.NaN;
+			log.error("can't parse: " + v, e);
+			return Double.NaN;
 		}
 	}
 

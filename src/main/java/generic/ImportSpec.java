@@ -6,11 +6,14 @@
 package generic;
 
 import static org.caleydo.core.view.opengl.layout2.renderer.GLRenderers.drawText;
-import generic.GenericRow.FloatGetter;
+import generic.GenericRow.DateGetter;
+import generic.GenericRow.DoubleGetter;
 import generic.GenericRow.IntGetter;
 import generic.GenericRow.StringGetter;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -18,13 +21,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.caleydo.core.io.MatrixDefinition;
 import org.caleydo.core.util.color.Color;
+import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.data.IDoubleInferrer;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
+import org.caleydo.vis.lineup.model.DateRankColumnModel;
+import org.caleydo.vis.lineup.model.DateRankColumnModel.DateMode;
 import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IntegerRankColumnModel;
 import org.caleydo.vis.lineup.model.StringRankColumnModel;
@@ -37,6 +44,8 @@ import demo.RankTableDemo;
  *
  */
 public class ImportSpec extends MatrixDefinition {
+	private static final Logger log = Logger.create(ImportSpec.class);
+
 	private List<ColumnSpec> columns = new ArrayList<>();
 	private String label;
 
@@ -86,8 +95,9 @@ public class ImportSpec extends MatrixDefinition {
 		 * @param col
 		 *            setter, see {@link col}
 		 */
-		public void setCol(int col) {
+		public ColumnSpec setCol(int col) {
 			this.col = col;
+			return this;
 		}
 
 		/**
@@ -110,9 +120,9 @@ public class ImportSpec extends MatrixDefinition {
 		public abstract ARankColumnModel create(String[] headers);
 	}
 
-	public static class FloatColumnSpec extends ColumnSpec {
-		protected PiecewiseMapping mapping = new PiecewiseMapping(0, 1);
-		protected IDoubleInferrer inferer = DoubleInferrers.fix(Float.NaN);
+	public static class DoubleColumnSpec extends ColumnSpec {
+		protected PiecewiseMapping mapping = new PiecewiseMapping(Double.NaN, Double.NaN);
+		protected IDoubleInferrer inferer = DoubleInferrers.fix(Double.NaN);
 
 		/**
 		 * @param mapping
@@ -132,13 +142,59 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public Object parse(String[] vals) {
-			return RankTableDemo.toFloat(vals, col);
+			return RankTableDemo.toDouble(vals, col);
 		}
 
 		@Override
 		public ARankColumnModel create(String[] headers) {
-			return new DoubleRankColumnModel(new FloatGetter(col), drawText(headers[col], VAlign.CENTER), color,
+			return new DoubleRankColumnModel(new DoubleGetter(col), drawText(headers[col], VAlign.CENTER), color,
 					bgColor, mapping, inferer);
+		}
+	}
+
+	public static class DateColumnSpec extends ColumnSpec {
+		private SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+		private DateMode mode = DateMode.DATE_TIME;
+
+		public String getPattern() {
+			return parser.toPattern();
+		}
+
+		public void setPattern(String pattern) {
+			parser.applyPattern(pattern);
+		}
+		/**
+		 * @param mode
+		 *            setter, see {@link mode}
+		 */
+		public void setMode(DateMode mode) {
+			this.mode = mode;
+		}
+
+		/**
+		 * @return the mode, see {@link #mode}
+		 */
+		public DateMode getMode() {
+			return mode;
+		}
+
+		@Override
+		public Object parse(String[] vals) {
+			String value = vals[col];
+			if (StringUtils.isBlank(value))
+				return null;
+			try {
+				return parser.parse(value);
+			} catch (ParseException e) {
+				log.error("can't parse: " + value, e);
+				return null;
+			}
+		}
+
+		@Override
+		public ARankColumnModel create(String[] headers) {
+			return new DateRankColumnModel(drawText(headers[col], VAlign.CENTER), new DateGetter(col), color, bgColor,
+					mode);
 		}
 	}
 
