@@ -196,4 +196,11 @@
             name="Load &amp;Data">
       </command>
    </extension>
+   <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandlerProductBinding
+            productId="org.caleydo.vis.lineup.demos.product"
+            splashId="org.caleydo.core.startup.progress">
+      </splashHandlerProductBinding>
+   </extension>
 </plugin>
