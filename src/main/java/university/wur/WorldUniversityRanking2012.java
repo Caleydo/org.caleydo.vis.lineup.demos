@@ -91,7 +91,7 @@ public class WorldUniversityRanking2012 implements IModelBuilder {
 		if (table == null)
 			return null;
 		for (ARankColumnModel model : table.getColumns()) {
-			if (model.getTitle().equals(name))
+			if (model.getLabel().equals(name))
 				return model;
 		}
 		return null;

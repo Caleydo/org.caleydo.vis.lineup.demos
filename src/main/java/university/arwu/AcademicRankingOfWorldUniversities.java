@@ -92,7 +92,7 @@ public class AcademicRankingOfWorldUniversities implements IModelBuilder {
 
 	private static ARankColumnModel find(RankTableModel table, String name) {
 		for (ARankColumnModel model : table.getColumns()) {
-			if (model.getTitle().equals(name))
+			if (model.getLabel().equals(name))
 				return model;
 		}
 		return null;
