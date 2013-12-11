@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.view.opengl.canvas.GLThreadListenerWrapper;
 import org.caleydo.core.view.opengl.canvas.IGLKeyListener;
-import org.caleydo.core.view.opengl.canvas.IGLMouseListener;
 import org.caleydo.core.view.opengl.layout2.GLElement;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.layout.GLPadding;
@@ -21,7 +20,6 @@ import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.ui.RankTableKeyListener;
 import org.caleydo.vis.lineup.ui.RankTableUI;
-import org.caleydo.vis.lineup.ui.RankTableUIMouseKeyListener;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -49,7 +47,6 @@ public class RankTableDemo extends GLSandBox {
 			log.error("can't build demo table", e1);
 		}
 
-		canvas.addKeyListener(eventListeners.register(GLThreadListenerWrapper.wrap(new RankTableKeyListener(table))));
 		createUI();
 
 	}
@@ -66,14 +63,10 @@ public class RankTableDemo extends GLSandBox {
 		RankTableUI root = (RankTableUI) getRoot();
 		root.init(table, RankTableUIConfigs.DEFAULT, RowHeightLayouts.UNIFORM, RowHeightLayouts.FISH_EYE);
 
-		RankTableUIMouseKeyListener l = new RankTableUIMouseKeyListener(root.findBody());
-		IGLKeyListener key = GLThreadListenerWrapper.wrap((IGLKeyListener) l);
+		RankTableKeyListener l = new RankTableKeyListener(table, root.findBody());
+		IGLKeyListener key = GLThreadListenerWrapper.wrap(l);
 		eventListeners.register(key);
 		canvas.addKeyListener(key);
-
-		IGLMouseListener mouse = GLThreadListenerWrapper.wrap((IGLMouseListener) l);
-		eventListeners.register(mouse);
-		canvas.addMouseListener(mouse);
 	}
 
 	public static double toDouble(String[] l, int i) {
