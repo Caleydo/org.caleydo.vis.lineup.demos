@@ -31,9 +31,7 @@ import org.caleydo.core.io.gui.dataimport.widget.LoadFileWidget;
 import org.caleydo.core.util.base.ICallback;
 import org.caleydo.core.util.color.ColorBrewer;
 import org.caleydo.core.util.execution.SafeCallable;
-import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.DateRankColumnModel.DateMode;
-import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -435,8 +433,8 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 					if (element instanceof DoubleColumnSpec) {
 						DoubleColumnSpec s = (DoubleColumnSpec) element;
 						StringBuilder b = new StringBuilder();
-						b.append(toString(s.mapping.getFromMin())).append("...")
-								.append(toString(s.mapping.getFromMax()));
+						b.append(toString(s.mappingMin)).append("...")
+								.append(toString(s.mappingMax));
 						return b.toString();
 					} else if (element instanceof DateColumnSpec) {
 						DateColumnSpec s = (DateColumnSpec) element;
@@ -554,7 +552,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			l.setText("Mapping Min:");
 			minUI = new Text(parent, SWT.BORDER);
 			minUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			minUI.setText(Double.isNaN(col.mapping.getFromMin()) ? "" : String.valueOf(col.mapping.getFromMin()));
+			minUI.setText(Double.isNaN(col.mappingMin) ? "" : String.valueOf(col.mappingMin));
 			final Image image = FieldDecorationRegistry.getDefault()
 					.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION).getImage();
 
@@ -566,7 +564,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			l.setText("Mapping Max:");
 			maxUI = new Text(parent, SWT.BORDER);
 			maxUI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			maxUI.setText(Double.isNaN(col.mapping.getFromMax()) ? "" : String.valueOf(col.mapping.getFromMax()));
+			maxUI.setText(Double.isNaN(col.mappingMax) ? "" : String.valueOf(col.mappingMax));
 			deco = new ControlDecoration(maxUI, SWT.TOP | SWT.LEFT);
 			deco.setDescriptionText("Leave empty to use the maximal value from the data");
 			deco.setImage(image);
@@ -576,23 +574,23 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			combo = new Combo(parent, SWT.READ_ONLY | SWT.DROP_DOWN);
 			combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			combo.setItems(new String[] { "NaN", "Mean", "Median" });
-			combo.setText(col.inferer == DoubleInferrers.MEAN ? "Mean"
-					: (col.inferer == DoubleInferrers.MEDIAN ? "Median" : "NaN"));
+			combo.setText(col.inferer == EInferer.Mean ? "Mean" : (col.inferer == EInferer.Median ? "Median" : "NaN"));
 			return parent;
 		}
 
 		@Override
 		protected void okPressed() {
-			col.mapping = new PiecewiseMapping(toFloat(minUI), toFloat(maxUI));
+			col.mappingMin = toFloat(minUI);
+			col.mappingMax = toFloat(maxUI);
 			switch (combo.getText()) {
 			case "NaN":
-				col.inferer = DoubleInferrers.fix(Float.NaN);
+				col.inferer = EInferer.NaN;
 				break;
 			case "Mean":
-				col.inferer = DoubleInferrers.MEAN;
+				col.inferer = EInferer.Mean;
 				break;
 			case "Median":
-				col.inferer = DoubleInferrers.MEDIAN;
+				col.inferer = EInferer.Median;
 				break;
 			}
 			super.okPressed();

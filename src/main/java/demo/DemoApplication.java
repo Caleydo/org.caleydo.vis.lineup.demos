@@ -5,6 +5,8 @@
  ******************************************************************************/
 package demo;
 
+import org.caleydo.core.manager.GeneralManager;
+import org.caleydo.core.util.logging.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.action.ContributionItem;
@@ -38,6 +40,11 @@ public class DemoApplication implements IApplication {
 
 	@Override
 	public Object start(IApplicationContext context) {
+		final Logger log = Logger.create(DemoApplication.class);
+		log.info("Starting Caleydo");
+
+		GeneralManager.get(); // stupid but needed for initialization
+
 		Display display = PlatformUI.createDisplay();
 		try {
 			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());

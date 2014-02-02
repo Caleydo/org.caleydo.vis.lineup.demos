@@ -78,7 +78,7 @@
             class="generic.GenericView"
             id="lineup.demo.generic"
             name="Generic"
-            restorable="false">
+            restorable="true">
       </view>
    </extension>
    <extension
@@ -136,6 +136,16 @@
             <command
                   commandId="org.caleydo.vis.lineup.demos.showwizard"
                   label="&amp;Load Data"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.core.startup.open"
+                  label="Open Project"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.core.io.gui.save_project"
+                  label="Save Project"
                   style="push">
             </command>
             <command

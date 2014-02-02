@@ -36,7 +36,11 @@ import demo.RankTableDemo.IModelBuilder;
  */
 public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 	public ARcpRankTableDemoView() {
-		super(SView.class);
+		this(SView.class);
+	}
+
+	public ARcpRankTableDemoView(Class<? extends ASerializedView> serializedViewClass) {
+		super(serializedViewClass);
 	}
 
 	@Override

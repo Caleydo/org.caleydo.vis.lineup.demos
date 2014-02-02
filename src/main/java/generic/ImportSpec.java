@@ -15,19 +15,24 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.commons.lang.StringUtils;
 import org.caleydo.core.io.MatrixDefinition;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
-import org.caleydo.vis.lineup.data.DoubleInferrers;
-import org.caleydo.vis.lineup.data.IDoubleInferrer;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
 import org.caleydo.vis.lineup.model.DateRankColumnModel;
@@ -43,6 +48,7 @@ import demo.RankTableDemo;
  * @author Samuel Gratzl
  *
  */
+@XmlRootElement
 public class ImportSpec extends MatrixDefinition {
 	private static final Logger log = Logger.create(ImportSpec.class);
 
@@ -86,6 +92,8 @@ public class ImportSpec extends MatrixDefinition {
 		this.columns = columns;
 	}
 
+	@XmlSeeAlso({ IntegerColumnSpec.class, StringColumnSpec.class, DoubleColumnSpec.class, DateColumnSpec.class,
+			CategoricalColumnSpec.class })
 	public static abstract class ColumnSpec {
 		protected int col;
 		protected Color color = Color.LIGHT_GRAY;
@@ -101,19 +109,28 @@ public class ImportSpec extends MatrixDefinition {
 		}
 
 		/**
-		 * @param color
-		 *            setter, see {@link color}
+		 * @return the col, see {@link #col}
 		 */
-		public void setColor(Color color) {
-			this.color = color;
+		public int getCol() {
+			return col;
 		}
 
-		/**
-		 * @param bgColor
-		 *            setter, see {@link bgColor}
-		 */
-		public void setBgColor(Color bgColor) {
-			this.bgColor = bgColor;
+		@XmlAttribute
+		public String getColor() {
+			return color.getHEX();
+		}
+
+		public void setColor(String color) {
+			this.color = new Color(color);
+		}
+
+		@XmlAttribute
+		public String getBGColor() {
+			return bgColor.getHEX();
+		}
+
+		public void setBGColor(String color) {
+			this.bgColor = new Color(color);
 		}
 
 		public abstract Object parse(String[] vals);
@@ -121,24 +138,12 @@ public class ImportSpec extends MatrixDefinition {
 	}
 
 	public static class DoubleColumnSpec extends ColumnSpec {
-		protected PiecewiseMapping mapping = new PiecewiseMapping(Double.NaN, Double.NaN);
-		protected IDoubleInferrer inferer = DoubleInferrers.fix(Double.NaN);
-
-		/**
-		 * @param mapping
-		 *            setter, see {@link mapping}
-		 */
-		public void setMapping(PiecewiseMapping mapping) {
-			this.mapping = mapping;
-		}
-
-		/**
-		 * @param inferer
-		 *            setter, see {@link inferer}
-		 */
-		public void setInferer(IDoubleInferrer inferer) {
-			this.inferer = inferer;
-		}
+		@XmlAttribute
+		protected double mappingMin = Double.NaN;
+		@XmlAttribute
+		protected double mappingMax = Double.NaN;
+		@XmlAttribute
+		protected EInferer inferer = EInferer.NaN;
 
 		@Override
 		public Object parse(String[] vals) {
@@ -147,15 +152,18 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public ARankColumnModel create(String[] headers) {
+			PiecewiseMapping mapping = new PiecewiseMapping(mappingMin, mappingMax);
 			return new DoubleRankColumnModel(new DoubleGetter(col), drawText(headers[col], VAlign.CENTER), color,
-					bgColor, mapping, inferer);
+					bgColor, mapping, inferer.toInferer());
 		}
 	}
 
 	public static class DateColumnSpec extends ColumnSpec {
-		private SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+		@XmlTransient
+		private final SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
 		private DateMode mode = DateMode.DATE_TIME;
 
+		@XmlAttribute
 		public String getPattern() {
 			return parser.toPattern();
 		}
@@ -174,6 +182,7 @@ public class ImportSpec extends MatrixDefinition {
 		/**
 		 * @return the mode, see {@link #mode}
 		 */
+		@XmlAttribute
 		public DateMode getMode() {
 			return mode;
 		}
@@ -217,6 +226,8 @@ public class ImportSpec extends MatrixDefinition {
 
 	public static class StringColumnSpec extends ColumnSpec {
 
+		public StringColumnSpec() {
+		}
 		/**
 		 * @param col
 		 */
@@ -237,8 +248,11 @@ public class ImportSpec extends MatrixDefinition {
 	}
 
 	public static class CategoricalColumnSpec extends ColumnSpec {
-		private Set<String> categories;
+		@XmlElement
+		private Set<String> categories = new HashSet<>();
 
+		public CategoricalColumnSpec() {
+		}
 		/**
 		 * @param set
 		 */

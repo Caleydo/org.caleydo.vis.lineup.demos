@@ -25,8 +25,13 @@ public class ShowWizardHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ImportSpec spec = new ImportWizard().call();
+		showView(spec);
+		return null;
+	}
+
+	public static void showView(ImportSpec spec) {
 		if (spec == null)
-			return null;
+			return;
 		GenericView.lastSpec = spec;
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -35,6 +40,5 @@ public class ShowWizardHandler extends AbstractHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
 	}
 }
