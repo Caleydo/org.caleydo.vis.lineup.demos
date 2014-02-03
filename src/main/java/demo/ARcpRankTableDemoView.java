@@ -121,6 +121,12 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 		}
 	}
 
+	protected RankTableModel getTable() {
+		GLView v = (GLView)view;
+		if (v == null)
+			return null;
+		return v.table;
+	}
 
 	@XmlRootElement
 	public static class SView extends ASerializedView {

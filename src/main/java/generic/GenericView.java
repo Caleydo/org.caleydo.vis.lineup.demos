@@ -14,9 +14,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.caleydo.core.gui.command.AOpenViewHandler;
 import org.caleydo.core.serialize.ASerializedView;
+import org.caleydo.vis.lineup.model.RankTableModel;
 
 import demo.ARcpRankTableDemoView;
 import demo.RankTableDemo.IModelBuilder;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
@@ -28,8 +30,9 @@ public class GenericView extends ARcpRankTableDemoView {
 	 * bad HACK for transporting an element to the view
 	 */
 	public static ImportSpec lastSpec;
+	public static RankTableSpec lastTableSpec;
 	private ImportSpec spec;
-
+	private RankTableSpec tableSpec;
 	/**
 	 *
 	 */
@@ -37,6 +40,8 @@ public class GenericView extends ARcpRankTableDemoView {
 		super(GenericSpecView.class);
 		spec = lastSpec;
 		lastSpec = null;
+		tableSpec = lastTableSpec;
+		lastTableSpec = null;
 	}
 
 	@Override
@@ -44,7 +49,9 @@ public class GenericView extends ARcpRankTableDemoView {
 		if (spec == null && this.serializedView instanceof GenericSpecView
 				&& ((GenericSpecView) serializedView).getSpec() != null)
 			spec = ((GenericSpecView) serializedView).call();
-		return new GenericModelBuilder(spec);
+		if (tableSpec == null && this.serializedView instanceof GenericSpecView)
+			tableSpec = ((GenericSpecView) serializedView).getTableSpec();
+		return new GenericModelBuilder(spec, tableSpec);
 	}
 
 	/**
@@ -61,13 +68,20 @@ public class GenericView extends ARcpRankTableDemoView {
 
 	@Override
 	public void createDefaultSerializedView() {
-		serializedView = new GenericSpecView(spec);
+		serializedView = new GenericSpecView(spec, null);
 	}
 
 	/** Returns a current serializable snapshot of the view */
 	@Override
 	public ASerializedView getSerializedView() {
-		return new GenericSpecView(spec);
+		RankTableSpec tableSpec = createRankTableSpec();
+		return new GenericSpecView(spec, tableSpec);
+	}
+
+	public RankTableSpec createRankTableSpec() {
+		RankTableModel t = getTable();
+		RankTableSpec tableSpec = t == null ? null : GenericModelBuilder.save(t);
+		return tableSpec;
 	}
 
 	public static class Handler extends AOpenViewHandler {
@@ -83,11 +97,14 @@ public class GenericView extends ARcpRankTableDemoView {
 		@XmlElement
 		private byte[] file;
 
+		private RankTableSpec tableSpec;
+
 		public GenericSpecView() {
 		}
 
-		public GenericSpecView(ImportSpec spec) {
+		public GenericSpecView(ImportSpec spec, RankTableSpec tableSpec) {
 			this.spec = spec;
+			this.tableSpec = tableSpec;
 
 			try {
 				this.file = Files.readAllBytes(new File(spec.getDataSourcePath()).toPath());
@@ -110,6 +127,21 @@ public class GenericView extends ARcpRankTableDemoView {
 		 */
 		public ImportSpec getSpec() {
 			return spec;
+		}
+
+		/**
+		 * @return the tableSpec, see {@link #tableSpec}
+		 */
+		public RankTableSpec getTableSpec() {
+			return tableSpec;
+		}
+
+		/**
+		 * @param tableSpec
+		 *            setter, see {@link tableSpec}
+		 */
+		public void setTableSpec(RankTableSpec tableSpec) {
+			this.tableSpec = tableSpec;
 		}
 
 		public ImportSpec call() {

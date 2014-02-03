@@ -19,6 +19,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.bind.JAXB;
 
+import org.caleydo.core.util.logging.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.IViewPart;
@@ -31,6 +32,7 @@ import com.google.common.io.Files;
 
 import demo.ARcpRankTableDemoView;
 import demo.handler.ShowWizardHandler;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
@@ -66,7 +68,7 @@ public class ProjectManager implements IRunnableWithProgress {
 				continue;
 			ARcpRankTableDemoView d = (ARcpRankTableDemoView) view;
 			if (d instanceof GenericView) {
-				specs.add(new ImportedViewSpec(((GenericView) d).getSpec()));
+				specs.add(new ImportedViewSpec(((GenericView) d).getSpec(), ((GenericView) d).createRankTableSpec()));
 			} else {
 				specs.add(new StandardViewSpec(d.getViewGUIID()));
 			}
@@ -85,8 +87,7 @@ public class ProjectManager implements IRunnableWithProgress {
 			out.putNextEntry(new ZipEntry("importSpecs.xml"));
 			JAXB.marshal(specs, out);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.create(ProjectManager.class).error("can't save project: " + file, e);
 		}
 
 	}
@@ -107,14 +108,15 @@ public class ProjectManager implements IRunnableWithProgress {
 					java.nio.file.Files.copy(in.getInputStream(in.getEntry(prefix + ".csv")), f.toPath(),
 							StandardCopyOption.REPLACE_EXISTING);
 					s.setDataSourcePath(f.getAbsolutePath());
+					RankTableSpec tableSpec = ((ImportedViewSpec) spec).getTableSpec();
+					GenericView.lastTableSpec = tableSpec;
 					ShowWizardHandler.showView(s, page);
 				} else if (spec instanceof StandardViewSpec) {
 					page.showView(((StandardViewSpec) spec).getViewId());
 				}
 			}
 		} catch (IOException | PartInitException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.create(ProjectManager.class).error("can't load project: " + file, e);
 		}
 	}
 
