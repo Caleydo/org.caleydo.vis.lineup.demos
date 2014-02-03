@@ -143,6 +143,14 @@
                   style="push">
             </command>
             <command
+                  commandId="org.caleydo.vis.lineup.demos.export"
+                  label="&amp;Export Data"
+                  style="push">
+            </command>
+            <separator
+                  name="org.caleydo.vis.lineup.demos.separator1">
+            </separator>
+            <command
                   commandId="org.caleydo.vis.lineup.demos.loadproject"
                   label="Open Project"
                   style="push">
@@ -152,6 +160,9 @@
                   label="Save Project"
                   style="push">
             </command>
+            <separator
+                  name="org.caleydo.vis.lineup.demos.separator2">
+            </separator>
             <command
                   commandId="org.eclipse.ui.window.preferences"
                   label="Preferences"
@@ -218,6 +229,11 @@
             defaultHandler="demo.handler.SaveProjectHandler"
             id="org.caleydo.vis.lineup.demos.saveproject"
             name="Save &amp;Project">
+      </command>
+      <command
+            defaultHandler="demo.handler.ExportTableHandler"
+            id="org.caleydo.vis.lineup.demos.export"
+            name="&amp;Export Table">
       </command>
    </extension>
    <extension

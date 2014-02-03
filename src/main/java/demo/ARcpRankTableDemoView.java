@@ -142,7 +142,7 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 		}
 	}
 
-	protected RankTableModel getTable() {
+	public RankTableModel getTable() {
 		GLView v = (GLView)view;
 		if (v == null)
 			return null;
