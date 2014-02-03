@@ -103,14 +103,19 @@ public class ImportSpec extends MatrixDefinition {
 		 * @param col
 		 *            setter, see {@link col}
 		 */
-		public ColumnSpec setCol(int col) {
+		public void setCol(int col) {
 			this.col = col;
+		}
+
+		public ColumnSpec useCol(int col) {
+			setCol(col);
 			return this;
 		}
 
 		/**
 		 * @return the col, see {@link #col}
 		 */
+		@XmlAttribute
 		public int getCol() {
 			return col;
 		}

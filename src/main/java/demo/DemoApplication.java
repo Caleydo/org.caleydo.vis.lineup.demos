@@ -5,6 +5,9 @@
  ******************************************************************************/
 package demo;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+
 import org.caleydo.core.manager.GeneralManager;
 import org.caleydo.core.util.logging.Logger;
 import org.eclipse.equinox.app.IApplication;
@@ -13,11 +16,14 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IPageLayout;
@@ -36,16 +42,19 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
  * @author Samuel Gratzl
  *
  */
-public class DemoApplication implements IApplication {
+public class DemoApplication implements IApplication, Listener {
+
+	private File projectLocation;
 
 	@Override
 	public Object start(IApplicationContext context) {
 		final Logger log = Logger.create(DemoApplication.class);
-		log.info("Starting Caleydo");
+		log.info("Starting LineUp");
 
 		GeneralManager.get(); // stupid but needed for initialization
 
 		Display display = PlatformUI.createDisplay();
+		display.addListener(SWT.OpenDocument, this);
 		try {
 			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
 			if (returnCode == PlatformUI.RETURN_RESTART) {
@@ -54,6 +63,28 @@ public class DemoApplication implements IApplication {
 			return IApplication.EXIT_OK;
 		} finally {
 			display.dispose();
+		}
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		if (event.text != null && !event.text.isEmpty())
+			this.projectLocation = new File(event.text);
+	}
+
+	/**
+	 *
+	 */
+	public void loadProject() {
+		if (projectLocation == null || !projectLocation.exists())
+			return;
+
+		final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final demo.project.ProjectManager manager = new demo.project.ProjectManager(true, projectLocation, page);
+		try {
+			new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(false, false, manager);
+		} catch (InvocationTargetException | InterruptedException e) {
+			Logger.create(DemoApplication.class).error("can't load project: " + projectLocation, e);
 		}
 	}
 
@@ -72,7 +103,7 @@ public class DemoApplication implements IApplication {
 		});
 	}
 
-	public static class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
+	public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		@Override
 		public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
 			// PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_PROGRESS_ON_STARTUP, true);
@@ -85,7 +116,7 @@ public class DemoApplication implements IApplication {
 		}
 	}
 
-	public static class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
+	public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 		/**
 		 * @param configurer
@@ -143,6 +174,8 @@ public class DemoApplication implements IApplication {
 			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
 			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
 			menuManager.insertAfter("demos", menu2);
+
+			loadProject();
 		}
 	}
 
@@ -185,7 +218,7 @@ public class DemoApplication implements IApplication {
 				else
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(viewId);
 			} catch (PartInitException e1) {
-				e1.printStackTrace();
+				Logger.create(ShowView.class).error("can't create view: " + viewId, e);
 			}
 		}
 
@@ -205,5 +238,6 @@ public class DemoApplication implements IApplication {
 			layout.setFixed(true);
 		}
 	}
+
 
 }

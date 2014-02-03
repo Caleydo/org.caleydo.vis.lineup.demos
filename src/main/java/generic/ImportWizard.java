@@ -238,11 +238,11 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 			}
 			final int valid = size - nan - 1;
 			if (f >= valid * 0.9) // more than 90% doubles
-				return new DoubleColumnSpec().setCol(col);
+				return new DoubleColumnSpec().useCol(col);
 			if (i >= valid * 0.9)
-				return new IntegerColumnSpec().setCol(col);
+				return new IntegerColumnSpec().useCol(col);
 			if (d >= valid * 0.9)
-				return new DateColumnSpec().setCol(col);
+				return new DateColumnSpec().useCol(col);
 			return new StringColumnSpec(col);
 		}
 

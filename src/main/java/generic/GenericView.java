@@ -41,7 +41,8 @@ public class GenericView extends ARcpRankTableDemoView {
 
 	@Override
 	public IModelBuilder createModel() {
-		if (this.serializedView instanceof GenericSpecView && ((GenericSpecView) serializedView).getSpec() != null)
+		if (spec == null && this.serializedView instanceof GenericSpecView
+				&& ((GenericSpecView) serializedView).getSpec() != null)
 			spec = ((GenericSpecView) serializedView).call();
 		return new GenericModelBuilder(spec);
 	}

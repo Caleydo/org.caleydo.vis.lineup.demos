@@ -139,12 +139,12 @@
                   style="push">
             </command>
             <command
-                  commandId="org.caleydo.core.startup.open"
+                  commandId="org.caleydo.vis.lineup.demos.loadproject"
                   label="Open Project"
                   style="push">
             </command>
             <command
-                  commandId="org.caleydo.core.io.gui.save_project"
+                  commandId="org.caleydo.vis.lineup.demos.saveproject"
                   label="Save Project"
                   style="push">
             </command>
@@ -205,6 +205,16 @@
             id="org.caleydo.vis.lineup.demos.showwizard"
             name="Load &amp;Data">
       </command>
+      <command
+            defaultHandler="demo.handler.LoadProjectHandler"
+            id="org.caleydo.vis.lineup.demos.loadproject"
+            name="&amp;Load Project">
+      </command>
+      <command
+            defaultHandler="demo.handler.SaveProjectHandler"
+            id="org.caleydo.vis.lineup.demos.saveproject"
+            name="Save &amp;Project">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.splashHandlers">
@@ -212,5 +222,11 @@
             productId="org.caleydo.vis.lineup.demos.product"
             splashId="org.caleydo.core.startup.progress">
       </splashHandlerProductBinding>
+   </extension>
+   <extension
+         point="org.caleydo.serialize.addon">
+      <addon
+            class="generic.SerializationAddon">
+      </addon>
    </extension>
 </plugin>

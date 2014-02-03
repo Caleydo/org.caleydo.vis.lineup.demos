@@ -3,7 +3,7 @@
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  *******************************************************************************/
-package generic;
+package demo.project;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,37 +16,41 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class ImportSpecs implements Iterable<ImportSpec> {
-	private List<ImportSpec> importSpec = new ArrayList<>();
+public class ProjectDescription implements Iterable<AViewSpec> {
+	private List<AViewSpec> viewSpec = new ArrayList<>();
 
 	/**
-	 * @return the importSpec, see {@link #importSpec}
+	 * @return the viewSpecs, see {@link #viewSpec}
 	 */
-	public List<ImportSpec> getImportSpec() {
-		return importSpec;
+	public List<AViewSpec> getViewSpecs() {
+		return viewSpec;
 	}
 
 	/**
-	 * @param importSpec
-	 *            setter, see {@link importSpec}
+	 * @param viewSpecs
+	 *            setter, see {@link viewSpecs}
 	 */
-	public void setImportSpec(List<ImportSpec> importSpec) {
-		this.importSpec = importSpec;
+	public void setViewSpecs(List<AViewSpec> viewSpecs) {
+		this.viewSpec = viewSpecs;
 	}
 
 	/**
 	 * @param spec
 	 */
-	public void add(ImportSpec spec) {
-		this.importSpec.add(spec);
+	public void add(AViewSpec spec) {
+		this.viewSpec.add(spec);
 	}
 
 	public int size() {
-		return importSpec.size();
+		return viewSpec.size();
+	}
+
+	public boolean isEmpty() {
+		return viewSpec.isEmpty();
 	}
 
 	@Override
-	public Iterator<ImportSpec> iterator() {
-		return importSpec.iterator();
+	public Iterator<AViewSpec> iterator() {
+		return viewSpec.iterator();
 	}
 }
