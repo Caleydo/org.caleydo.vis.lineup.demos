@@ -9,6 +9,7 @@ import org.caleydo.core.gui.command.AOpenViewHandler;
 
 import demo.ARcpRankTableDemoView;
 import demo.RankTableDemo.IModelBuilder;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
@@ -17,13 +18,18 @@ import demo.RankTableDemo.IModelBuilder;
 public class WorldBestUniversitiesView extends ARcpRankTableDemoView {
 	private static final String ID = "lineup.demo.university.wur";
 	@Override
-	public IModelBuilder createModel() {
+	public IModelBuilder createModel(RankTableSpec tableSpec) {
 		return new WorldBestUniversities();
 	}
 
 	@Override
 	protected String getCopyright() {
 		return "<a href=\"http://mup.asu.edu/research_data.html\">The Center for Measuring University Performance</a>";
+	}
+
+	@Override
+	public RankTableSpec createRankTableSpec() {
+		return null;
 	}
 
 	@Override

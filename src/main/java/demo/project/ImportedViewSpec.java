@@ -15,7 +15,6 @@ import demo.project.model.RankTableSpec;
 public class ImportedViewSpec extends AViewSpec {
 	private ImportSpec spec;
 
-	private RankTableSpec tableSpec;
 
 	/**
 	 *
@@ -25,23 +24,8 @@ public class ImportedViewSpec extends AViewSpec {
 	}
 
 	public ImportedViewSpec(ImportSpec spec, RankTableSpec tableSpec) {
+		super(tableSpec);
 		this.spec = spec;
-		this.tableSpec = tableSpec;
-	}
-
-	/**
-	 * @return the tableSpec, see {@link #tableSpec}
-	 */
-	public RankTableSpec getTableSpec() {
-		return tableSpec;
-	}
-
-	/**
-	 * @param tableSpec
-	 *            setter, see {@link tableSpec}
-	 */
-	public void setTableSpec(RankTableSpec tableSpec) {
-		this.tableSpec = tableSpec;
 	}
 
 	/**

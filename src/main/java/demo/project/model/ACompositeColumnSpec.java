@@ -13,8 +13,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
+import org.caleydo.core.util.color.Color;
 import org.caleydo.vis.lineup.model.ACompositeRankColumnModel;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
+import org.caleydo.vis.lineup.model.GroupRankColumnModel;
+import org.caleydo.vis.lineup.model.MaxRankColumnModel;
+import org.caleydo.vis.lineup.model.NestedRankColumnModel;
+import org.caleydo.vis.lineup.model.ScriptedRankColumnModel;
+import org.caleydo.vis.lineup.model.StackedRankColumnModel;
 
 /**
  * @author Samuel Gratzl
@@ -50,5 +56,27 @@ public class ACompositeColumnSpec extends ARankColumnSpec implements Iterable<AR
 	@Override
 	public Iterator<ARankColumnSpec> iterator() {
 		return children.iterator();
+	}
+
+	/**
+	 * @param col
+	 * @param headers
+	 * @return
+	 */
+	public static ARankColumnModel create(ACompositeColumnSpec col) {
+		ACompositeRankColumnModel c = null;
+		if (col instanceof GroupRankColumnSpec)
+			c = new GroupRankColumnModel("Group", Color.GRAY, new Color(0.95f, .95f, .95f));
+		else if (col instanceof StackedRankColumnSpec)
+			c = new StackedRankColumnModel();
+		else if (col instanceof MaxRankColumnSpec)
+			c = new MaxRankColumnModel();
+		else if (col instanceof NestedRankColumnSpec)
+			c = new NestedRankColumnModel();
+		else if (col instanceof ScriptedRankColumnSpec)
+			c = new ScriptedRankColumnModel();
+		if (c == null)
+			return null;
+		return c;
 	}
 }

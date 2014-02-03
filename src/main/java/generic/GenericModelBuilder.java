@@ -20,23 +20,12 @@ import java.util.List;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.caleydo.core.util.collection.Pair;
-import org.caleydo.core.util.color.Color;
 import org.caleydo.core.util.logging.Logger;
 import org.caleydo.vis.lineup.model.ACompositeRankColumnModel;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
-import org.caleydo.vis.lineup.model.DateRankColumnModel;
-import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
-import org.caleydo.vis.lineup.model.GroupRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
-import org.caleydo.vis.lineup.model.IntegerRankColumnModel;
-import org.caleydo.vis.lineup.model.MaxRankColumnModel;
-import org.caleydo.vis.lineup.model.NestedRankColumnModel;
-import org.caleydo.vis.lineup.model.OrderColumn;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
-import org.caleydo.vis.lineup.model.ScriptedRankColumnModel;
-import org.caleydo.vis.lineup.model.StackedRankColumnModel;
-import org.caleydo.vis.lineup.model.StringRankColumnModel;
 import org.caleydo.vis.lineup.model.mixin.IDataBasedColumnMixin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,18 +36,7 @@ import com.google.common.base.Function;
 import demo.RankTableDemo.IModelBuilder;
 import demo.project.model.ACompositeColumnSpec;
 import demo.project.model.ARankColumnSpec;
-import demo.project.model.DateRankColumnSpec;
-import demo.project.model.DoubleRankColumnSpec;
-import demo.project.model.GroupRankColumnSpec;
-import demo.project.model.IntegerRankColumnSpec;
-import demo.project.model.MaxRankColumnSpec;
-import demo.project.model.NestedRankColumnSpec;
-import demo.project.model.OrderRankColumnSpec;
-import demo.project.model.RankRankColumnSpec;
 import demo.project.model.RankTableSpec;
-import demo.project.model.ScriptedRankColumnSpec;
-import demo.project.model.StackedRankColumnSpec;
-import demo.project.model.StringRankColumnSpec;
 
 /**
  * @author Samuel Gratzl
@@ -125,39 +103,16 @@ public class GenericModelBuilder implements IModelBuilder {
 	 * @return
 	 */
 	private ARankColumnModel createFor(ARankColumnSpec col, String[] headers) {
-		if (col instanceof OrderRankColumnSpec)
-			return new OrderColumn();
-		if (col instanceof RankRankColumnSpec)
-			return new RankRankColumnModel();
-		if (col instanceof ACompositeColumnSpec)
-			return createComposite((ACompositeColumnSpec) col, headers);
+		ARankColumnModel c = RankTableSpec.create(col);
+		if (c != null)
+			return c;
 		String d = col.getData();
 		if (d != null && NumberUtils.isDigits(d))
 			return bySpec(Integer.parseInt(d), headers);
 		return null;
 	}
 
-	/**
-	 * @param col
-	 * @param headers
-	 * @return
-	 */
-	private ARankColumnModel createComposite(ACompositeColumnSpec col, String[] headers) {
-		ACompositeRankColumnModel c = null;
-		if (col instanceof GroupRankColumnSpec)
-			c = new GroupRankColumnModel("Group", Color.GRAY, new Color(0.95f, .95f, .95f));
-		else if (col instanceof StackedRankColumnSpec)
-			c = new StackedRankColumnModel();
-		else if (col instanceof MaxRankColumnSpec)
-			c = new MaxRankColumnModel();
-		else if (col instanceof NestedRankColumnSpec)
-			c = new NestedRankColumnModel();
-		else if (col instanceof ScriptedRankColumnSpec)
-			c = new ScriptedRankColumnModel();
-		if (c == null)
-			return null;
-		return c;
-	}
+
 
 	/**
 	 * @param parseInt
@@ -172,75 +127,12 @@ public class GenericModelBuilder implements IModelBuilder {
 		return null;
 	}
 
-	public static RankTableSpec save(RankTableModel table) {
-		RankTableSpec spec = new RankTableSpec();
-		for (ARankColumnModel col : table.getColumns()) {
-			ARankColumnSpec c = save(col);
-			if (c == null)
-				continue;
-			spec.addColumn(c);
+	public static Function<IDataBasedColumnMixin, String> DATA_CREATOR = new Function<IDataBasedColumnMixin, String>() {
+		@Override
+		public String apply(IDataBasedColumnMixin input) {
+			return toColumn(input.getData());
 		}
-		for (ARankColumnModel col : table.getPool()) {
-			ARankColumnSpec c = save(col);
-			if (c == null)
-				continue;
-			spec.addPool(c);
-		}
-		return spec;
-	}
-
-	/**
-	 * @param col
-	 * @return
-	 */
-	private static ARankColumnSpec save(ARankColumnModel col) {
-		ARankColumnSpec r = null;
-		if (col instanceof StringRankColumnModel)
-			r = new StringRankColumnSpec();
-		else if (col instanceof RankRankColumnModel)
-			r = new RankRankColumnSpec();
-		else if (col instanceof OrderColumn)
-			r = new OrderRankColumnSpec();
-		else if (col instanceof IntegerRankColumnModel)
-			r = new IntegerRankColumnSpec();
-		else if (col instanceof DateRankColumnModel)
-			r = new DateRankColumnSpec();
-		else if (col instanceof DoubleRankColumnModel)
-			r = new DoubleRankColumnSpec();
-		else if (col instanceof ACompositeRankColumnModel)
-			r = saveComposite((ACompositeRankColumnModel) col);
-		if (r == null)
-			return null;
-		r.save(col);
-		if (col instanceof IDataBasedColumnMixin)
-			r.setData(toColumn(((IDataBasedColumnMixin) col).getData()));
-
-		return r;
-	}
-
-	/**
-	 * @param col
-	 * @return
-	 */
-	private static ARankColumnSpec saveComposite(ACompositeRankColumnModel col) {
-		ACompositeColumnSpec r = null;
-		if (col instanceof GroupRankColumnModel)
-			r = new GroupRankColumnSpec();
-		else if (col instanceof StackedRankColumnModel)
-			r = new StackedRankColumnSpec();
-		else if (col instanceof NestedRankColumnModel)
-			r = new NestedRankColumnSpec();
-		else if (col instanceof MaxRankColumnModel)
-			r = new MaxRankColumnSpec();
-		else if (col instanceof ScriptedRankColumnModel)
-			r = new ScriptedRankColumnSpec();
-		if (r == null)
-			return null;
-		for (ARankColumnModel child : col) {
-			r.addChild(save(child));
-		}
-		return r;
-	}
+	};
 
 	/**
 	 * @param data

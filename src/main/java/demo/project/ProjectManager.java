@@ -32,7 +32,6 @@ import com.google.common.io.Files;
 
 import demo.ARcpRankTableDemoView;
 import demo.handler.ShowWizardHandler;
-import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
@@ -68,9 +67,9 @@ public class ProjectManager implements IRunnableWithProgress {
 				continue;
 			ARcpRankTableDemoView d = (ARcpRankTableDemoView) view;
 			if (d instanceof GenericView) {
-				specs.add(new ImportedViewSpec(((GenericView) d).getSpec(), ((GenericView) d).createRankTableSpec()));
+				specs.add(new ImportedViewSpec(((GenericView) d).getSpec(), d.createRankTableSpec()));
 			} else {
-				specs.add(new StandardViewSpec(d.getViewGUIID()));
+				specs.add(new StandardViewSpec(d.getViewGUIID(), d.createRankTableSpec()));
 			}
 		}
 
@@ -101,6 +100,7 @@ public class ProjectManager implements IRunnableWithProgress {
 
 			int i = 0;
 			for (AViewSpec spec : specs) {
+				ARcpRankTableDemoView.lastTableSpec = spec.getTableSpec();
 				if (spec instanceof ImportedViewSpec) {
 					ImportSpec s = ((ImportedViewSpec) spec).getSpec();
 					String prefix = String.format("importSpecFile%d", i++);
@@ -108,13 +108,12 @@ public class ProjectManager implements IRunnableWithProgress {
 					java.nio.file.Files.copy(in.getInputStream(in.getEntry(prefix + ".csv")), f.toPath(),
 							StandardCopyOption.REPLACE_EXISTING);
 					s.setDataSourcePath(f.getAbsolutePath());
-					RankTableSpec tableSpec = ((ImportedViewSpec) spec).getTableSpec();
-					GenericView.lastTableSpec = tableSpec;
 					ShowWizardHandler.showView(s, page);
 				} else if (spec instanceof StandardViewSpec) {
 					page.showView(((StandardViewSpec) spec).getViewId());
 				}
 			}
+			ARcpRankTableDemoView.lastTableSpec = null;
 		} catch (IOException | PartInitException e) {
 			Logger.create(ProjectManager.class).error("can't load project: " + file, e);
 		}

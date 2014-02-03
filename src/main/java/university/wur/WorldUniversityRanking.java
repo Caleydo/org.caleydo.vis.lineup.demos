@@ -15,35 +15,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
-import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.model.ARankColumnModel;
-import org.caleydo.vis.lineup.model.ARow;
-import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
-import org.caleydo.vis.lineup.model.IRow;
-import org.caleydo.vis.lineup.model.OrderColumn;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
-import org.caleydo.vis.lineup.model.StackedRankColumnModel;
-import org.caleydo.vis.lineup.model.StringRankColumnModel;
-
-import com.google.common.base.Function;
 
 import demo.RankTableDemo;
-import demo.RankTableDemo.IModelBuilder;
-import demo.ReflectionData;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
  *
  */
-public class WorldUniversityRanking implements IModelBuilder {
+public class WorldUniversityRanking extends AWorldUniversityRanking {
+
+	public WorldUniversityRanking(RankTableSpec spec) {
+		super(spec);
+	}
+
 	@Override
 	public void apply(RankTableModel table) throws Exception {
 		// qsrank schoolname qsstars overall academic employer faculty international internationalstudents citations
@@ -63,58 +55,28 @@ public class WorldUniversityRanking implements IModelBuilder {
 		table.addData(rows);
 		data = null;
 
-		table.add(new RankRankColumnModel());
-		final ARankColumnModel label = new StringRankColumnModel(GLRenderers.drawText("School Name", VAlign.CENTER),
-				StringRankColumnModel.DEFAULT).setWidth(300);
-		table.add(label);
+		if (tableSpec == null) {
+			table.add(new RankRankColumnModel());
+			table.add(createSchoolName());
 
-		CategoricalRankColumnModel<String> cat = CategoricalRankColumnModel
-				.createSimple(GLRenderers.drawText("Country",
-				VAlign.CENTER), new ReflectionData<>(UniversityRow.class.getDeclaredField("country"), String.class),
-						countries.values());
-		table.add(cat);
+			table.add(createCountries(countries.values()));
 
-		int rankColWidth = 40;
+			int rankColWidth = 40;
 
-		// Arrays.asList("wur2010.txt", "wur2011.txt", "wur2012.txt");
-		WorldUniversityYear.addYear(table, "2013", new YearGetter(0), false, false).orderByMe();
+			// Arrays.asList("wur2010.txt", "wur2011.txt", "wur2012.txt");
+			WorldUniversityYear.addYear(table, "2013", new YearGetter(0), false, false).orderByMe();
 
-		// WorldUniversityYear.addSpecialYear(table, new YearGetter(0));
+			// WorldUniversityYear.addSpecialYear(table, new YearGetter(0));
 
-		addYear(label, rankColWidth, table, "2012", new YearGetter(1)).setCompressed(true);
-		addYear(label, rankColWidth, table, "2011", new YearGetter(1)).setCompressed(true);
-		addYear(label, rankColWidth, table, "2010", new YearGetter(2)).setCompressed(true);
-		addYear(label, rankColWidth, table, "2009", new YearGetter(3)).setCollapsed(true);
-		addYear(label, rankColWidth, table, "2008", new YearGetter(4)).setCollapsed(true);
-		addYear(label, rankColWidth, table, "2007", new YearGetter(5)).setCollapsed(true);
-	}
-
-	private static StackedRankColumnModel addYear(ARankColumnModel label, int rankColWidth, RankTableModel table,
-			String title, YearGetter year) {
-		table.add(new OrderColumn());
-		table.add(new RankRankColumnModel().setWidth(rankColWidth));
-		table.add(label.clone().setCollapsed(true));
-		StackedRankColumnModel model = WorldUniversityYear.addYear(table, title, year, false, false);
-		model.orderByMe();
-		return model;
-	}
-
-	@Override
-	public Iterable<? extends ARankColumnModel> createAutoSnapshotColumns(RankTableModel table, ARankColumnModel model) {
-		Collection<ARankColumnModel> ms = new ArrayList<>(2);
-		ms.add(new RankRankColumnModel());
-		ARankColumnModel desc = find(table, "School Name");
-		if (desc != null)
-			ms.add(desc.clone().setCollapsed(true));
-		return ms;
-	}
-
-	private static ARankColumnModel find(RankTableModel table, String name) {
-		for (ARankColumnModel model : table.getColumns()) {
-			if (model.getLabel().equals(name))
-				return model;
+			addYear(rankColWidth, table, "2012", new YearGetter(1)).setCompressed(true);
+			addYear(rankColWidth, table, "2011", new YearGetter(2)).setCompressed(true);
+			addYear(rankColWidth, table, "2010", new YearGetter(3)).setCompressed(true);
+			addYear(rankColWidth, table, "2009", new YearGetter(4)).setCollapsed(true);
+			addYear(rankColWidth, table, "2008", new YearGetter(5)).setCollapsed(true);
+			addYear(rankColWidth, table, "2007", new YearGetter(6)).setCollapsed(true);
+		} else {
+			parseSpec(table, countries.values());
 		}
-		return null;
 	}
 
 	public static void dump() throws IOException {
@@ -159,53 +121,9 @@ public class WorldUniversityRanking implements IModelBuilder {
 		return Double.toString(f);
 	}
 
-	static class YearGetter implements Function<IRow, WorldUniversityYear> {
-		private final int year;
-
-		public YearGetter(int year) {
-			this.year = year;
-		}
-
-		@Override
-		public WorldUniversityYear apply(IRow in) {
-			UniversityRow r = (UniversityRow) in;
-			return r.years[year];
-		}
-	}
-
-	static class UniversityRow extends ARow {
-		public String schoolname;
-		private String country;
-
-		public WorldUniversityYear[] years;
-
-		/**
-		 * @param school
-		 * @param country
-		 * @param size
-		 */
-		public UniversityRow(String school, WorldUniversityYear[] years, String country) {
-			this.schoolname = school;
-			this.years = years;
-			this.country = country;
-		}
-
-		/**
-		 * @return the country, see {@link #country}
-		 */
-		public String getCountry() {
-			return country;
-		}
-
-		@Override
-		public String toString() {
-			return schoolname;
-		}
-	}
-
 	public static void main(String[] args) {
 		// dump();
 		GLSandBox.main(args, RankTableDemo.class, "world university ranking 2012,2011 and 2010",
-				new WorldUniversityRanking());
+				new WorldUniversityRanking(null));
 	}
 }

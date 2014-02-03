@@ -29,18 +29,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
 
 import demo.RankTableDemo.IModelBuilder;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
  *
  */
 public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
+	public static RankTableSpec lastTableSpec;
+	private RankTableSpec tableSpec;
+
 	public ARcpRankTableDemoView() {
 		this(SView.class);
+		tableSpec = lastTableSpec;
+		lastTableSpec = null;
 	}
 
 	public ARcpRankTableDemoView(Class<? extends ASerializedView> serializedViewClass) {
 		super(serializedViewClass);
+		tableSpec = lastTableSpec;
+		lastTableSpec = null;
 	}
 
 	@Override
@@ -62,6 +70,17 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 		return v;
 	}
 
+	@Override
+	public void createDefaultSerializedView() {
+		serializedView = new SView(null);
+	}
+
+	/** Returns a current serializable snapshot of the view */
+	@Override
+	public ASerializedView getSerializedView() {
+		RankTableSpec tableSpec = createRankTableSpec();
+		return new SView(tableSpec);
+	}
 	/**
 	 * @return
 	 */
@@ -79,14 +98,16 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 	/**
 	 * @return
 	 */
-	public abstract RankTableDemo.IModelBuilder createModel();
+	public abstract RankTableDemo.IModelBuilder createModel(RankTableSpec tableSpec);
 
 	class GLView extends AGLElementView {
 		protected final RankTableModel table;
 
 		public GLView(IGLCanvas glCanvas, String viewType, String viewName) {
 			super(glCanvas, viewType, viewName);
-			final IModelBuilder builder = createModel();
+			if (tableSpec == null && serializedView instanceof SView)
+				tableSpec = ((SView) serializedView).getTableSpec();
+			final IModelBuilder builder = createModel(tableSpec);
 			this.table = new RankTableModel(new RankTableConfigBase() {
 				@Override
 				public Iterable<? extends ARankColumnModel> createAutoSnapshotColumns(RankTableModel table,
@@ -130,10 +151,39 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 
 	@XmlRootElement
 	public static class SView extends ASerializedView {
+		private RankTableSpec tableSpec;
+
+		public SView() {
+		}
+
+		public SView(RankTableSpec tableSpec) {
+			this.tableSpec = tableSpec;
+		}
+
+		/**
+		 * @return the tableSpec, see {@link #tableSpec}
+		 */
+		public RankTableSpec getTableSpec() {
+			return tableSpec;
+		}
+
+		/**
+		 * @param tableSpec
+		 *            setter, see {@link tableSpec}
+		 */
+		public void setTableSpec(RankTableSpec tableSpec) {
+			this.tableSpec = tableSpec;
+		}
+
 		@Override
 		public String getViewType() {
 			return "";
 		}
 	}
+
+	/**
+	 * @return
+	 */
+	public abstract RankTableSpec createRankTableSpec();
 
 }

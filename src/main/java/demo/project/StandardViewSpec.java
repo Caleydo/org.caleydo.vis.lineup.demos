@@ -5,6 +5,8 @@
  *******************************************************************************/
 package demo.project;
 
+import demo.project.model.RankTableSpec;
+
 /**
  * @author Samuel Gratzl
  *
@@ -19,7 +21,8 @@ public class StandardViewSpec extends AViewSpec {
 
 	}
 
-	public StandardViewSpec(String viewId) {
+	public StandardViewSpec(String viewId, RankTableSpec spec) {
+		super(spec);
 		this.viewId = viewId;
 	}
 

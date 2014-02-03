@@ -8,7 +8,8 @@
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRankingView"
             id="lineup.demo.university.wur"
-            name="World University Ranking History">
+            name="World University Ranking History"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
@@ -22,21 +23,24 @@
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRanking2012View"
             id="lineup.demo.university.wur2012"
-            name="World University Ranking 2012">
+            name="World University Ranking 2012"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRanking2013View"
             id="lineup.demo.university.wur2013"
-            name="World University Ranking 2013">
+            name="World University Ranking 2013"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRankingEvaluation1View"
             id="lineup.eval.university.wur2012"
-            name="World University Ranking 2012">
+            name="World University Ranking 2012"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"

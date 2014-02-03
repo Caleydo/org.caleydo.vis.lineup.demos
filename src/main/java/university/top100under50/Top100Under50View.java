@@ -9,6 +9,7 @@ import org.caleydo.core.gui.command.AOpenViewHandler;
 
 import demo.ARcpRankTableDemoView;
 import demo.RankTableDemo.IModelBuilder;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
@@ -17,13 +18,18 @@ import demo.RankTableDemo.IModelBuilder;
 public class Top100Under50View extends ARcpRankTableDemoView {
 	private static final String ID = "lineup.demo.university.wur";
 	@Override
-	public IModelBuilder createModel() {
+	public IModelBuilder createModel(RankTableSpec tableSpec) {
 		return new Top100Under50();
 	}
 
 	@Override
 	protected String getCopyright() {
 		return "<a href=\"http://www.timeshighereducation.co.uk/world-university-rankings/2012/one-hundred-under-fifty\">Times Higher Education 100 Under 50</a>";
+	}
+
+	@Override
+	public RankTableSpec createRankTableSpec() {
+		return null;
 	}
 
 	@Override
