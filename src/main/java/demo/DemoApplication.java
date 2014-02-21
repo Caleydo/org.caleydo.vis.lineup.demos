@@ -157,6 +157,7 @@ public class DemoApplication implements IApplication, Listener {
 			}
 
 			MenuManager menu2 = new MenuManager("&Demos", "demos");
+			menu2.add(new ShowView("Chip Smartphones", "lineup.demo.chip", false));
 			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
 			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
 			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));

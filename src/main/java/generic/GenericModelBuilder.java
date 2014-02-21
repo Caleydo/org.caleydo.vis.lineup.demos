@@ -66,8 +66,10 @@ public class GenericModelBuilder implements IModelBuilder {
 		if (tableSpec == null) {
 			table.add(new RankRankColumnModel());
 			if (headers != null) {
-				for (ColumnSpec col : spec.getColumns()) {
-					table.add(col.create(headers));
+				final List<ColumnSpec> cs = this.spec.getColumns();
+				for (int i = 0; i < cs.size(); ++i) {
+					ColumnSpec spec = cs.get(i);
+					table.add(spec.create(headers, i));
 				}
 			}
 		} else {
@@ -120,9 +122,11 @@ public class GenericModelBuilder implements IModelBuilder {
 	 * @return
 	 */
 	private ARankColumnModel bySpec(int col, String[] headers) {
-		for (ColumnSpec spec : this.spec.getColumns()) {
-			if (spec.getCol() == col)
-				return spec.create(headers);
+		final List<ColumnSpec> cs = this.spec.getColumns();
+		for (int i = 0; i < cs.size(); ++i) {
+			ColumnSpec spec = cs.get(i);
+			if (i == col)
+				return spec.create(headers, i);
 		}
 		return null;
 	}

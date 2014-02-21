@@ -35,9 +35,13 @@ public class GenericView extends ARcpRankTableDemoView {
 	 *
 	 */
 	public GenericView() {
-		super(GenericSpecView.class);
-		spec = lastSpec;
+		this(lastSpec);
 		lastSpec = null;
+	}
+
+	public GenericView(ImportSpec spec) {
+		super(GenericSpecView.class);
+		this.spec = spec;
 	}
 
 	@Override

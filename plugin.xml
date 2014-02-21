@@ -84,6 +84,14 @@
             name="Generic"
             restorable="true">
       </view>
+      <view
+            allowMultiple="true"
+            category="org.caleydo.core.views"
+            class="chip.ChipView"
+            id="lineup.demo.chip"
+            name="Chip Smartphone Ranking"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

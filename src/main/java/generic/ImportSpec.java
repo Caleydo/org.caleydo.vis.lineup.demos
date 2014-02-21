@@ -129,6 +129,12 @@ public class ImportSpec extends MatrixDefinition {
 			this.color = new Color(color);
 		}
 
+		public ColumnSpec setColor(Color color, Color bgColor) {
+			this.color = color;
+			this.bgColor = bgColor == null ? new Color(0.95f, .95f, .95f) : bgColor;
+			return this;
+		}
+
 		@XmlAttribute
 		public String getBGColor() {
 			return bgColor.getHEX();
@@ -139,7 +145,8 @@ public class ImportSpec extends MatrixDefinition {
 		}
 
 		public abstract Object parse(String[] vals);
-		public abstract ARankColumnModel create(String[] headers);
+
+		public abstract ARankColumnModel create(String[] headers, int logicalCol);
 	}
 
 	public static class DoubleColumnSpec extends ColumnSpec {
@@ -155,10 +162,16 @@ public class ImportSpec extends MatrixDefinition {
 			return RankTableDemo.toDouble(vals, col);
 		}
 
+		public void setMapping(double mappingMin, double mappingMax, EInferer inferer) {
+			this.mappingMax = mappingMax;
+			this.mappingMin = mappingMin;
+			this.inferer = inferer;
+		}
 		@Override
-		public ARankColumnModel create(String[] headers) {
+		public ARankColumnModel create(String[] headers, int logicalCol) {
 			PiecewiseMapping mapping = new PiecewiseMapping(mappingMin, mappingMax);
-			return new DoubleRankColumnModel(new DoubleGetter(col), drawText(headers[col], VAlign.CENTER), color,
+			return new DoubleRankColumnModel(new DoubleGetter(logicalCol), drawText(headers[col], VAlign.CENTER),
+					color,
 					bgColor, mapping, inferer.toInferer());
 		}
 	}
@@ -166,7 +179,7 @@ public class ImportSpec extends MatrixDefinition {
 	public static class DateColumnSpec extends ColumnSpec {
 		@XmlTransient
 		private final SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
-		private DateMode mode = DateMode.DATE_TIME;
+		protected DateMode mode = DateMode.DATE_TIME;
 
 		@XmlAttribute
 		public String getPattern() {
@@ -206,8 +219,9 @@ public class ImportSpec extends MatrixDefinition {
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new DateRankColumnModel(drawText(headers[col], VAlign.CENTER), new DateGetter(col), color, bgColor,
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			return new DateRankColumnModel(drawText(headers[col], VAlign.CENTER), new DateGetter(logicalCol), color,
+					bgColor,
 					mode);
 		}
 	}
@@ -223,8 +237,8 @@ public class ImportSpec extends MatrixDefinition {
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new IntegerRankColumnModel(drawText(headers[col], VAlign.CENTER), new IntGetter(col), color,
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			return new IntegerRankColumnModel(drawText(headers[col], VAlign.CENTER), new IntGetter(logicalCol), color,
 					bgColor, NumberFormat.getInstance(Locale.ENGLISH));
 		}
 	}
@@ -242,19 +256,20 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public Object parse(String[] vals) {
-			return vals[col];
+			return StringUtils.trimToEmpty(vals[col]);
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new StringRankColumnModel(drawText(headers[col], VAlign.CENTER), new StringGetter(col), color,
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			return new StringRankColumnModel(drawText(headers[col], VAlign.CENTER), new StringGetter(logicalCol),
+					color,
 					bgColor);
 		}
 	}
 
 	public static class CategoricalColumnSpec extends ColumnSpec {
 		@XmlElement
-		private Set<String> categories = new HashSet<>();
+		protected Set<String> categories = new HashSet<>();
 
 		public CategoricalColumnSpec() {
 		}
@@ -265,18 +280,22 @@ public class ImportSpec extends MatrixDefinition {
 			this.categories = set;
 		}
 
-
-		@Override
-		public Object parse(String[] vals) {
-			return vals[col];
+		public void addCategory(String category) {
+			this.categories.add(category);
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
+		public Object parse(String[] vals) {
+			return StringUtils.trimToEmpty(vals[col]);
+		}
+
+		@Override
+		public ARankColumnModel create(String[] headers, int logicalCol) {
 			Map<String, String> map = new TreeMap<>();
 			for (String s : categories)
 				map.put(s, s);
-			return new CategoricalRankColumnModel<String>(drawText(headers[col], VAlign.CENTER), new StringGetter(col),
+			return new CategoricalRankColumnModel<String>(drawText(headers[col], VAlign.CENTER), new StringGetter(
+					logicalCol),
 					map, color, bgColor, "");
 		}
 	}
