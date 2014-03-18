@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.caleydo.vis.lineup.model.ACompositeRankColumnModel;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
+import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
 import org.caleydo.vis.lineup.model.DateRankColumnModel;
 import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.GroupRankColumnModel;
@@ -116,6 +117,8 @@ public class RankTableSpec {
 			r = new DateRankColumnSpec();
 		else if (col instanceof DoubleRankColumnModel)
 			r = new DoubleRankColumnSpec();
+		else if (col instanceof CategoricalRankColumnModel<?>)
+			r = new CategoricalRankColumnSpec();
 		else if (col instanceof ACompositeRankColumnModel)
 			r = saveComposite((ACompositeRankColumnModel) col, dataCreator);
 		if (r == null)
