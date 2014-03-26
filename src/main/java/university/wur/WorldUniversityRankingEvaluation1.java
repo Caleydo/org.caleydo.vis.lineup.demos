@@ -6,32 +6,28 @@
 package university.wur;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
-import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
-import org.caleydo.vis.lineup.model.ARankColumnModel;
-import org.caleydo.vis.lineup.model.ARow;
-import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
-import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
-import org.caleydo.vis.lineup.model.StringRankColumnModel;
-
-import com.google.common.base.Function;
 
 import demo.RankTableDemo;
-import demo.RankTableDemo.IModelBuilder;
-import demo.ReflectionData;
+import demo.project.model.RankTableSpec;
 
 /**
  * @author Samuel Gratzl
  *
  */
-public class WorldUniversityRankingEvaluation1 implements IModelBuilder {
+public class WorldUniversityRankingEvaluation1 extends AWorldUniversityRanking {
+	/**
+	 * @param spec
+	 */
+	public WorldUniversityRankingEvaluation1(RankTableSpec spec) {
+		super(spec);
+	}
+
 	@Override
 	public void apply(RankTableModel table) throws Exception {
 		Map<String, String> countries = WorldUniversityYear.readCountries();
@@ -46,73 +42,21 @@ public class WorldUniversityRankingEvaluation1 implements IModelBuilder {
 		table.addData(rows);
 		data = null;
 
-		RankRankColumnModel rank = new RankRankColumnModel();
-		rank.setWidth(40);
-		table.add(rank);
-		StringRankColumnModel label = new StringRankColumnModel(GLRenderers.drawText("School Name", VAlign.CENTER),
-				StringRankColumnModel.DEFAULT);
-		label.setWidth(240);
-		table.add(label);
+		if (tableSpec == null) {
+			RankRankColumnModel rank = new RankRankColumnModel();
+			rank.setWidth(40);
+			table.add(rank);
+			table.add(createSchoolName());
+			table.add(createCountries(countries.values()));
 
-		CategoricalRankColumnModel<String> cat = CategoricalRankColumnModel
-				.createSimple(GLRenderers.drawText(
-"Country",
-				VAlign.CENTER), new ReflectionData<>(UniversityRow.class.getDeclaredField("country"), String.class),
-						countries.values());
-		table.add(cat);
-
-		WorldUniversityYear.addYear(table, "World University Ranking", new YearGetter(0), false, true);
-	}
-
-	@Override
-	public Iterable<? extends ARankColumnModel> createAutoSnapshotColumns(RankTableModel table, ARankColumnModel model) {
-		Collection<ARankColumnModel> ms = new ArrayList<>(2);
-		ms.add(new RankRankColumnModel());
-		return ms;
-	}
-
-	static class YearGetter implements Function<IRow, WorldUniversityYear> {
-		private final int year;
-
-		public YearGetter(int year) {
-			this.year = year;
-		}
-
-		@Override
-		public WorldUniversityYear apply(IRow in) {
-			UniversityRow r = (UniversityRow) in;
-			return r.years[year];
-		}
-	}
-
-	static class UniversityRow extends ARow {
-		public String schoolname;
-		private String country;
-
-		public WorldUniversityYear[] years;
-
-		public UniversityRow(String school, WorldUniversityYear[] years, String country) {
-			this.schoolname = school;
-			this.years = years;
-			this.country = country;
-		}
-
-		/**
-		 * @return the country, see {@link #country}
-		 */
-		public String getCountry() {
-			return country;
-		}
-
-		@Override
-		public String toString() {
-			return schoolname;
-		}
+			WorldUniversityYear.addYear(table, "World University Ranking", new YearGetter(0), false, true);
+		} else
+			parseSpec(table, countries.values());
 	}
 
 	public static void main(String[] args) {
 		// dump();
 		GLSandBox.main(args, RankTableDemo.class, "WUR Eval 2012",
-				new WorldUniversityRankingEvaluation1());
+ new WorldUniversityRankingEvaluation1(null));
 	}
 }

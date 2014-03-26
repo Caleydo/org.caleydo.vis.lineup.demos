@@ -23,12 +23,14 @@ import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
 import org.caleydo.vis.lineup.data.ADoubleFunction;
 import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.data.IDoubleSetterFunction;
+import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.StackedRankColumnModel;
 import org.caleydo.vis.lineup.model.StarsRankColumnModel;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
+import org.caleydo.vis.lineup.model.mixin.IDataBasedColumnMixin;
 
 import com.google.common.base.Function;
 
@@ -174,50 +176,87 @@ public class WorldUniversityYear {
 		// stacked.add(col(year, COL_citations, "Citations per faculty", dark[4], light[4]));
 		// stacked.add(col(year, COL_international, "International faculty ratio", dark[5], light[5]));
 		// stacked.add(col(year, COL_internationalstudents, "International student ratio", dark[6], light[6]));
-		List<DoubleRankColumnModel> cols = new ArrayList<>();
-		cols.add(col(year, COL_academic, "Academic reputation", "#FC9272", "#FEE0D2"));
-		cols.add(col(year, COL_employer, "Employer reputation", "#9ECAE1", "#DEEBF7"));
-		cols.add(col(year, COL_faculty, "Faculty/student ratio", "#A1D99B", "#E5F5E0"));
-		cols.add(col(year, COL_citations, "Citations per faculty", "#C994C7", "#E7E1EF"));
-		cols.add(col(year, COL_international, "International faculty ratio", "#FDBB84", "#FEE8C8"));
-		cols.add(col(year, COL_internationalstudents, "International student ratio", "#DFC27D", "#F6E8C3"));
+		List<ARankColumnModel> cols = new ArrayList<>();
+		cols.add(createfor(COL_academic, year));
+		cols.add(createfor(COL_employer, year));
+		cols.add(createfor(COL_faculty, year));
+		cols.add(createfor(COL_citations, year));
+		cols.add(createfor(COL_international, year));
+		cols.add(createfor(COL_internationalstudents, year));
 
 		final StackedRankColumnModel stacked;
 		if (asIs) {
 			stacked = null;
-			for (DoubleRankColumnModel col : cols)
+			for (ARankColumnModel col : cols)
 				table.add(col);
 		} else {
 			stacked = new StackedRankColumnModel();
 			stacked.setTitle(title);
 			table.add(stacked);
-			for (DoubleRankColumnModel col : cols)
+			for (ARankColumnModel col : cols)
 				stacked.add(col);
 
 			stacked.setWeights(new float[] { 40, 10, 20, 20, 5, 5 });
 			stacked.setWidth(380);
 		}
 		if (addStars) {
-			StarsRankColumnModel s = new StarsRankColumnModel(new ValueGetter(year, COL_QSSTARS), GLRenderers.drawText(
-					"QS Stars", VAlign.CENTER), new Color("#FECC5C"), new Color("#FFFFB2"), 6);
-			table.add(s);
+			table.add(createfor(COL_QSSTARS, year));
 		}
 		return stacked;
 	}
 
+	/**
+	 * @param col
+	 * @param substring
+	 * @param yearGetter
+	 * @return
+	 */
+	public static ARankColumnModel createfor(int subindex, Function<IRow, WorldUniversityYear> year) {
+		switch (subindex) {
+		case COL_academic:
+			return col(year, COL_academic, "Academic reputation", "#FC9272", "#FEE0D2");
+		case COL_arts:
+			return col(year, COL_arts, "Arts & Humanities", "#FFD92F", "#FFFFCC");
+		case COL_citations:
+			return col(year, COL_citations, "Citations per faculty", "#C994C7", "#E7E1EF");
+		case COL_employer:
+			return col(year, COL_employer, "Employer reputation", "#9ECAE1", "#DEEBF7");
+		case COL_engineering:
+			return col(year, COL_engineering, "Engineering & Technology", "#8DA0CB", "#ECE2F0");
+		case COL_faculty:
+			return col(year, COL_faculty, "Faculty/student ratio", "#A1D99B", "#E5F5E0");
+		case COL_international:
+			return col(year, COL_international, "International faculty ratio", "#FDBB84", "#FEE8C8");
+		case COL_internationalstudents:
+			return col(year, COL_internationalstudents, "International student ratio", "#DFC27D", "#F6E8C3");
+		case COL_life:
+			return col(year, COL_life, "Life Sciences & Medicine", "#E78AC3", "#FDE0DD");
+		case COL_natural:
+			return col(year, COL_natural, "Natural Sciences", "#A6D854", "#F7FCB9");
+		case COL_overall:
+			return null;
+		case COL_QSSTARS:
+			return new StarsRankColumnModel(new ValueGetter(year, COL_QSSTARS), GLRenderers.drawText("QS Stars",
+					VAlign.CENTER), new Color("#FECC5C"), new Color("#FFFFB2"), 6);
+		case COL_social:
+			return null;
+		}
+		return null;
+	}
+
 	public static void addSpecialYear(RankTableModel table, Function<IRow, WorldUniversityYear> year) {
 
-		DoubleRankColumnModel c;
-		c = col(year, COL_arts, "Arts & Humanities", "#FFD92F", "#FFFFCC");
+		ARankColumnModel c;
+		c = createfor(COL_arts, year);
 		table.add(c);
 		c.hide();
-		c = col(year, COL_engineering, "Engineering & Technology", "#8DA0CB", "#ECE2F0");
+		c = createfor(COL_engineering, year);
 		table.add(c);
 		c.hide();
-		c = col(year, COL_life, "Life Sciences & Medicine", "#E78AC3", "#FDE0DD");
+		c = createfor(COL_life, year);
 		table.add(c);
 		c.hide();
-		c = col(year, COL_natural, "Natural Sciences", "#A6D854", "#F7FCB9");
+		c = createfor(COL_natural, year);
 		table.add(c);
 		c.hide();
 	}
@@ -307,5 +346,19 @@ public class WorldUniversityYear {
 				return;
 			y.set(subindex, value);
 		}
+	}
+
+	/**
+	 * @param input
+	 * @param i
+	 * @return
+	 */
+	public static String apply(IDataBasedColumnMixin input) {
+		Function<IRow, ?> f = input.getData();
+		if (f instanceof ValueGetter) {
+			final ValueGetter value = (ValueGetter) f;
+			return value.year.toString() + " " + value.subindex;
+		}
+		return null;
 	}
 }

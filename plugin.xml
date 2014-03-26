@@ -8,7 +8,8 @@
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRankingView"
             id="lineup.demo.university.wur"
-            name="World University Ranking History">
+            name="World University Ranking History"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
@@ -22,21 +23,24 @@
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRanking2012View"
             id="lineup.demo.university.wur2012"
-            name="World University Ranking 2012">
+            name="World University Ranking 2012"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRanking2013View"
             id="lineup.demo.university.wur2013"
-            name="World University Ranking 2013">
+            name="World University Ranking 2013"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
             category="org.caleydo.core.views"
             class="university.wur.WorldUniversityRankingEvaluation1View"
             id="lineup.eval.university.wur2012"
-            name="World University Ranking 2012">
+            name="World University Ranking 2012"
+            restorable="true">
       </view>
       <view
             allowMultiple="true"
@@ -78,7 +82,15 @@
             class="generic.GenericView"
             id="lineup.demo.generic"
             name="Generic"
-            restorable="false">
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="true"
+            category="org.caleydo.core.views"
+            class="chip.ChipView"
+            id="lineup.demo.chip"
+            name="Chip Smartphone Ranking"
+            restorable="true">
       </view>
    </extension>
    <extension
@@ -139,6 +151,27 @@
                   style="push">
             </command>
             <command
+                  commandId="org.caleydo.vis.lineup.demos.export"
+                  label="&amp;Export Data"
+                  style="push">
+            </command>
+            <separator
+                  name="org.caleydo.vis.lineup.demos.separator1">
+            </separator>
+            <command
+                  commandId="org.caleydo.vis.lineup.demos.loadproject"
+                  label="Open Project"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.vis.lineup.demos.saveproject"
+                  label="Save Project"
+                  style="push">
+            </command>
+            <separator
+                  name="org.caleydo.vis.lineup.demos.separator2">
+            </separator>
+            <command
                   commandId="org.eclipse.ui.window.preferences"
                   label="Preferences"
                   mnemonic="P"
@@ -195,5 +228,33 @@
             id="org.caleydo.vis.lineup.demos.showwizard"
             name="Load &amp;Data">
       </command>
+      <command
+            defaultHandler="demo.handler.LoadProjectHandler"
+            id="org.caleydo.vis.lineup.demos.loadproject"
+            name="&amp;Load Project">
+      </command>
+      <command
+            defaultHandler="demo.handler.SaveProjectHandler"
+            id="org.caleydo.vis.lineup.demos.saveproject"
+            name="Save &amp;Project">
+      </command>
+      <command
+            defaultHandler="demo.handler.ExportTableHandler"
+            id="org.caleydo.vis.lineup.demos.export"
+            name="&amp;Export Table">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandlerProductBinding
+            productId="org.caleydo.vis.lineup.demos.product"
+            splashId="org.caleydo.core.startup.progress">
+      </splashHandlerProductBinding>
+   </extension>
+   <extension
+         point="org.caleydo.serialize.addon">
+      <addon
+            class="generic.SerializationAddon">
+      </addon>
    </extension>
 </plugin>

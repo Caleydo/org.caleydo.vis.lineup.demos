@@ -15,19 +15,24 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.commons.lang.StringUtils;
 import org.caleydo.core.io.MatrixDefinition;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.view.opengl.layout.Column.VAlign;
-import org.caleydo.vis.lineup.data.DoubleInferrers;
-import org.caleydo.vis.lineup.data.IDoubleInferrer;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.CategoricalRankColumnModel;
 import org.caleydo.vis.lineup.model.DateRankColumnModel;
@@ -43,6 +48,7 @@ import demo.RankTableDemo;
  * @author Samuel Gratzl
  *
  */
+@XmlRootElement
 public class ImportSpec extends MatrixDefinition {
 	private static final Logger log = Logger.create(ImportSpec.class);
 
@@ -86,6 +92,8 @@ public class ImportSpec extends MatrixDefinition {
 		this.columns = columns;
 	}
 
+	@XmlSeeAlso({ IntegerColumnSpec.class, StringColumnSpec.class, DoubleColumnSpec.class, DateColumnSpec.class,
+			CategoricalColumnSpec.class })
 	public static abstract class ColumnSpec {
 		protected int col;
 		protected Color color = Color.LIGHT_GRAY;
@@ -95,67 +103,85 @@ public class ImportSpec extends MatrixDefinition {
 		 * @param col
 		 *            setter, see {@link col}
 		 */
-		public ColumnSpec setCol(int col) {
+		public void setCol(int col) {
 			this.col = col;
+		}
+
+		public ColumnSpec useCol(int col) {
+			setCol(col);
 			return this;
 		}
 
 		/**
-		 * @param color
-		 *            setter, see {@link color}
+		 * @return the col, see {@link #col}
 		 */
-		public void setColor(Color color) {
-			this.color = color;
+		@XmlAttribute
+		public int getCol() {
+			return col;
 		}
 
-		/**
-		 * @param bgColor
-		 *            setter, see {@link bgColor}
-		 */
-		public void setBgColor(Color bgColor) {
-			this.bgColor = bgColor;
+		@XmlAttribute
+		public String getColor() {
+			return color.getHEX();
+		}
+
+		public void setColor(String color) {
+			this.color = new Color(color);
+		}
+
+		public ColumnSpec setColor(Color color, Color bgColor) {
+			this.color = color;
+			this.bgColor = bgColor == null ? new Color(0.95f, .95f, .95f) : bgColor;
+			return this;
+		}
+
+		@XmlAttribute
+		public String getBGColor() {
+			return bgColor.getHEX();
+		}
+
+		public void setBGColor(String color) {
+			this.bgColor = new Color(color);
 		}
 
 		public abstract Object parse(String[] vals);
-		public abstract ARankColumnModel create(String[] headers);
+
+		public abstract ARankColumnModel create(String[] headers, int logicalCol);
 	}
 
 	public static class DoubleColumnSpec extends ColumnSpec {
-		protected PiecewiseMapping mapping = new PiecewiseMapping(Double.NaN, Double.NaN);
-		protected IDoubleInferrer inferer = DoubleInferrers.fix(Double.NaN);
-
-		/**
-		 * @param mapping
-		 *            setter, see {@link mapping}
-		 */
-		public void setMapping(PiecewiseMapping mapping) {
-			this.mapping = mapping;
-		}
-
-		/**
-		 * @param inferer
-		 *            setter, see {@link inferer}
-		 */
-		public void setInferer(IDoubleInferrer inferer) {
-			this.inferer = inferer;
-		}
+		@XmlAttribute
+		protected double mappingMin = Double.NaN;
+		@XmlAttribute
+		protected double mappingMax = Double.NaN;
+		@XmlAttribute
+		protected EInferer inferer = EInferer.NaN;
 
 		@Override
 		public Object parse(String[] vals) {
 			return RankTableDemo.toDouble(vals, col);
 		}
 
+		public void setMapping(double mappingMin, double mappingMax, EInferer inferer) {
+			this.mappingMax = mappingMax;
+			this.mappingMin = mappingMin;
+			this.inferer = inferer;
+		}
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new DoubleRankColumnModel(new DoubleGetter(col), drawText(headers[col], VAlign.CENTER), color,
-					bgColor, mapping, inferer);
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			PiecewiseMapping mapping = new PiecewiseMapping(mappingMin, mappingMax);
+			return new DoubleRankColumnModel(new DoubleGetter(logicalCol), drawText(headers[col], VAlign.CENTER),
+					color,
+					bgColor, mapping, inferer.toInferer());
 		}
 	}
 
 	public static class DateColumnSpec extends ColumnSpec {
-		private SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
-		private DateMode mode = DateMode.DATE_TIME;
+		@XmlTransient
+		private final SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+		protected DateMode mode = DateMode.DATE_TIME;
 
+		@XmlAttribute
 		public String getPattern() {
 			return parser.toPattern();
 		}
@@ -174,6 +200,7 @@ public class ImportSpec extends MatrixDefinition {
 		/**
 		 * @return the mode, see {@link #mode}
 		 */
+		@XmlAttribute
 		public DateMode getMode() {
 			return mode;
 		}
@@ -192,8 +219,9 @@ public class ImportSpec extends MatrixDefinition {
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new DateRankColumnModel(drawText(headers[col], VAlign.CENTER), new DateGetter(col), color, bgColor,
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			return new DateRankColumnModel(drawText(headers[col], VAlign.CENTER), new DateGetter(logicalCol), color,
+					bgColor,
 					mode);
 		}
 	}
@@ -209,14 +237,16 @@ public class ImportSpec extends MatrixDefinition {
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new IntegerRankColumnModel(drawText(headers[col], VAlign.CENTER), new IntGetter(col), color,
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			return new IntegerRankColumnModel(drawText(headers[col], VAlign.CENTER), new IntGetter(logicalCol), color,
 					bgColor, NumberFormat.getInstance(Locale.ENGLISH));
 		}
 	}
 
 	public static class StringColumnSpec extends ColumnSpec {
 
+		public StringColumnSpec() {
+		}
 		/**
 		 * @param col
 		 */
@@ -226,19 +256,23 @@ public class ImportSpec extends MatrixDefinition {
 
 		@Override
 		public Object parse(String[] vals) {
-			return vals[col];
+			return StringUtils.trimToEmpty(vals[col]);
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
-			return new StringRankColumnModel(drawText(headers[col], VAlign.CENTER), new StringGetter(col), color,
+		public ARankColumnModel create(String[] headers, int logicalCol) {
+			return new StringRankColumnModel(drawText(headers[col], VAlign.CENTER), new StringGetter(logicalCol),
+					color,
 					bgColor);
 		}
 	}
 
 	public static class CategoricalColumnSpec extends ColumnSpec {
-		private Set<String> categories;
+		@XmlElement
+		protected Set<String> categories = new HashSet<>();
 
+		public CategoricalColumnSpec() {
+		}
 		/**
 		 * @param set
 		 */
@@ -246,18 +280,22 @@ public class ImportSpec extends MatrixDefinition {
 			this.categories = set;
 		}
 
-
-		@Override
-		public Object parse(String[] vals) {
-			return vals[col];
+		public void addCategory(String category) {
+			this.categories.add(category);
 		}
 
 		@Override
-		public ARankColumnModel create(String[] headers) {
+		public Object parse(String[] vals) {
+			return StringUtils.trimToEmpty(vals[col]);
+		}
+
+		@Override
+		public ARankColumnModel create(String[] headers, int logicalCol) {
 			Map<String, String> map = new TreeMap<>();
 			for (String s : categories)
 				map.put(s, s);
-			return new CategoricalRankColumnModel<String>(drawText(headers[col], VAlign.CENTER), new StringGetter(col),
+			return new CategoricalRankColumnModel<String>(drawText(headers[col], VAlign.CENTER), new StringGetter(
+					logicalCol),
 					map, color, bgColor, "");
 		}
 	}
