@@ -3,50 +3,50 @@
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  ******************************************************************************/
-package demo;
+package demo.internal;
 
-import java.lang.reflect.Field;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import org.caleydo.core.util.color.Color;
+import org.caleydo.core.view.opengl.layout.Column.VAlign;
 import org.caleydo.core.view.opengl.layout2.GLSandBox;
 import org.caleydo.core.view.opengl.layout2.renderer.GLRenderers;
+import org.caleydo.vis.lineup.data.ADoubleFunction;
+import org.caleydo.vis.lineup.data.DoubleInferrers;
 import org.caleydo.vis.lineup.model.ARankColumnModel;
 import org.caleydo.vis.lineup.model.ARow;
-import org.caleydo.vis.lineup.model.DateRankColumnModel;
+import org.caleydo.vis.lineup.model.DoubleRankColumnModel;
 import org.caleydo.vis.lineup.model.IRow;
 import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
+import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 
-import com.google.common.base.Function;
-
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
+import demo.RankTableDemo;
 
 /**
  * @author Samuel Gratzl
  *
  */
-public class SimpleDateTest implements IModelBuilder {
+public class SameScoreTest implements IModelBuilder {
 	@Override
 	public void apply(RankTableModel table) throws Exception {
-		table.add(new RankRankColumnModel());
+		// table.add(new RankRankColumnModel());
+		table.add(new DoubleRankColumnModel(new ADoubleFunction<IRow>() {
+			@Override
+			public double applyPrimitive(IRow in) {
+				return ((SimpleRow) in).value;
+			}
+		}, GLRenderers.drawText("Float", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
+				new PiecewiseMapping(0, Float.NaN), DoubleInferrers.MEAN));
 
-		table.add(new DateRankColumnModel(GLRenderers.drawText("Date"), new Function<IRow, Date>() {
-					@Override
-			public Date apply(IRow in) {
-						return ((SimpleRow) in).value;
-					}
-		}));
-
-		long offset = Timestamp.valueOf("2012-01-01 00:00:00").getTime();
-		long end = Timestamp.valueOf("2018-01-01 00:00:00").getTime();
-		long diff = end - offset + 1;
-		List<IRow> rows = new ArrayList<>(20);
-		for (int i = 0; i < 20; ++i)
-			rows.add(new SimpleRow(new Timestamp(offset + (long) (Math.random() * diff))));
+		Random r = new Random(200);
+		List<IRow> rows = new ArrayList<>(100);
+		for (int i = 0; i < 100; ++i)
+			rows.add(new SimpleRow(Math.round(r.nextFloat() * 10) / 10.f));
 		table.addData(rows);
 	}
 
@@ -55,19 +55,16 @@ public class SimpleDateTest implements IModelBuilder {
 		return Collections.singleton(new RankRankColumnModel());
 	}
 
-	public static Field field(String f) throws NoSuchFieldException {
-		return SimpleRow.class.getDeclaredField(f);
-	}
-
 	static class SimpleRow extends ARow {
-		private final Date value;
 
-		public SimpleRow(Date value) {
-			this.value = value;
+		private final float value;
+		public SimpleRow(float v) {
+			this.value = v;
 		}
+
 	}
 
 	public static void main(String[] args) {
-		GLSandBox.main(args, RankTableDemo.class, "SimpelDateTest", new SimpleDateTest());
+		GLSandBox.main(args, RankTableDemo.class, "Same Score", new SameScoreTest());
 	}
 }

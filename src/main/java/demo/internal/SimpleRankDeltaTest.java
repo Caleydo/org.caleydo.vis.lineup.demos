@@ -3,7 +3,7 @@
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  ******************************************************************************/
-package demo;
+package demo.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,8 @@ import org.caleydo.vis.lineup.model.RankRankColumnModel;
 import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
+import demo.RankTableDemo;
 
 /**
  * @author Samuel Gratzl

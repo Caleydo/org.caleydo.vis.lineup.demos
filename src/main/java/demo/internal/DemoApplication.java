@@ -3,7 +3,7 @@
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  ******************************************************************************/
-package demo;
+package demo.internal;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

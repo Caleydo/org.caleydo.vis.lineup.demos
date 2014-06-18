@@ -80,15 +80,9 @@ public class RankTableDemo extends GLSandBox {
 			v = v.substring(0, p);
 		try {
 			return Double.parseDouble(v);
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			log.error("can't parse: " + v, e);
 			return Double.NaN;
 		}
-	}
-
-	public interface IModelBuilder {
-		void apply(RankTableModel table) throws Exception;
-
-		Iterable<? extends ARankColumnModel> createAutoSnapshotColumns(RankTableModel table, ARankColumnModel model);
 	}
 }

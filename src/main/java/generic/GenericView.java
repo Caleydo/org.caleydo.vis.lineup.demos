@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Caleydo - Visualization for Molecular Biology - http://caleydo.org
+s * Caleydo - Visualization for Molecular Biology - http://caleydo.org
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  ******************************************************************************/
@@ -12,12 +12,12 @@ import java.nio.file.Files;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.caleydo.core.gui.command.AOpenViewHandler;
+import org.caleydo.core.internal.cmd.AOpenViewHandler;
 import org.caleydo.core.serialize.ASerializedView;
 import org.caleydo.vis.lineup.model.RankTableModel;
 
 import demo.ARcpRankTableDemoView;
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
 import demo.project.model.RankTableSpec;
 
 /**

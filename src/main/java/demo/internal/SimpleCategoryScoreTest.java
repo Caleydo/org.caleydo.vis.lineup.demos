@@ -3,7 +3,7 @@
  * Copyright (c) The Caleydo Team. All rights reserved.
  * Licensed under the new BSD license, available at http://caleydo.org/license
  ******************************************************************************/
-package demo;
+package demo.internal;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -27,7 +27,8 @@ import org.caleydo.vis.lineup.model.mapping.BaseCategoricalMappingFunction;
 
 import com.google.common.base.Function;
 
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
+import demo.RankTableDemo;
 
 /**
  * @author Samuel Gratzl

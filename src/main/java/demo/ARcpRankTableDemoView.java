@@ -8,6 +8,7 @@ package demo;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.caleydo.core.serialize.ASerializedView;
+import org.caleydo.core.util.logging.Logger;
 import org.caleydo.core.util.system.BrowserUtils;
 import org.caleydo.core.view.ARcpGLElementViewPart;
 import org.caleydo.core.view.opengl.canvas.GLThreadListenerWrapper;
@@ -28,7 +29,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
 
-import demo.RankTableDemo.IModelBuilder;
 import demo.project.model.RankTableSpec;
 
 /**
@@ -36,6 +36,8 @@ import demo.project.model.RankTableSpec;
  *
  */
 public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
+	private final static Logger log = Logger.create(ARcpRankTableDemoView.class);
+
 	public static RankTableSpec lastTableSpec;
 	private RankTableSpec tableSpec;
 
@@ -98,7 +100,7 @@ public abstract class ARcpRankTableDemoView extends ARcpGLElementViewPart {
 	/**
 	 * @return
 	 */
-	public abstract RankTableDemo.IModelBuilder createModel(RankTableSpec tableSpec);
+	public abstract IModelBuilder createModel(RankTableSpec tableSpec);
 
 	class GLView extends AGLElementView {
 		protected final RankTableModel table;

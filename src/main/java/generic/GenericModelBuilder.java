@@ -33,7 +33,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 
 import com.google.common.base.Function;
 
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
 import demo.project.model.ACompositeColumnSpec;
 import demo.project.model.ARankColumnSpec;
 import demo.project.model.RankTableSpec;
