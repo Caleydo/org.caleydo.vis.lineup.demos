@@ -42,7 +42,7 @@
          </property>
          <property
                name="windowImages"
-               value="platform:/plugin/org.caleydo.core/resources/icons/caleydo_16.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_32.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_48.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_64.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_128.png">
+               value="platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_16.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_32.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_48.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_64.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_128.png">
          </property>
       </product>
    </extension>
@@ -91,6 +91,10 @@
                   mnemonic="E"
                   style="push">
             </command>
+         </menu>
+         <menu
+               id="org.caleydo.lineup.menu.demos"
+               label="Demos">
          </menu>
          <menu
                id="org.caleydo.lineup.menu.window"

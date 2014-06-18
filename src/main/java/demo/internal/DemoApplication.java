@@ -15,7 +15,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -156,25 +155,25 @@ public class DemoApplication implements IApplication, Listener {
 				}
 			}
 
-			MenuManager menu2 = new MenuManager("&Demos", "demos");
-			menu2.add(new ShowView("Chip Smartphones", "lineup.demo.chip", false));
-			// menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
-			// menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
-			// menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
-			menu2.add(new ShowView("World University Ranking 2013", "lineup.demo.university.wur2013", false));
-			menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012", false));
-			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
-			menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50", false));
-			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
-			menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl", false));
-
-			menuManager.insertAfter("org.caleydo.lineup.menu.file", menu2);
-
-			menu2 = new MenuManager("&Evaluation", "eval");
-			menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012", false));
-			menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
-			menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
-			menuManager.insertAfter("demos", menu2);
+			// MenuManager menu2 = new MenuManager("&Demos", "demos");
+			// menu2.add(new ShowView("Chip Smartphones", "lineup.demo.chip", false));
+			// // menu2.add(new ShowView("University Rankings 2012", "lineup.demo.university.mixed"));
+			// // menu2.add(new ShowView("Academic Ranking Of World Universties", "lineup.demo.university.arwu"));
+			// // menu2.add(new ShowView("Measuring University Performance", "lineup.demo.university.mup"));
+			// menu2.add(new ShowView("World University Ranking 2013", "lineup.demo.university.wur2013", false));
+			// menu2.add(new ShowView("World University Ranking 2012", "lineup.demo.university.wur2012", false));
+			// menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
+			// menu2.add(new ShowView("Top 100 under 50 2012", "lineup.demo.university.top100under50", false));
+			// menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
+			// menu2.add(new ShowView("NASA Task Load Index User Study Results", "lineup.demo.nasatxl", false));
+			//
+			// menuManager.insertAfter("org.caleydo.lineup.menu.file", menu2);
+			//
+			// menu2 = new MenuManager("&Evaluation", "eval");
+			// menu2.add(new ShowView("World University Ranking 2012", "lineup.eval.university.wur2012", false));
+			// menu2.add(new ShowView("World University Rankings", "lineup.demo.university.wur", false));
+			// menu2.add(new ShowView("Food Nutrition", "lineup.demo.food", false));
+			// menuManager.insertAfter("demos", menu2);
 
 			loadProject();
 		}
@@ -234,8 +233,8 @@ public class DemoApplication implements IApplication, Listener {
 		@Override
 		public void createInitialLayout(IPageLayout layout) {
 			layout.setEditorAreaVisible(false);
-			layout.addView("lineup.demo.university.wur2013", IPageLayout.TOP, IPageLayout.RATIO_MAX,
-					IPageLayout.ID_EDITOR_AREA);
+			// layout.addView("lineup.demo.university.wur2013", IPageLayout.TOP, IPageLayout.RATIO_MAX,
+			// IPageLayout.ID_EDITOR_AREA);
 			layout.setFixed(true);
 		}
 	}
