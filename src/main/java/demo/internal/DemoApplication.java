@@ -7,9 +7,14 @@ package demo.internal;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.caleydo.core.manager.GeneralManager;
+import org.caleydo.core.util.ExtensionUtils;
+import org.caleydo.core.util.ExtensionUtils.IExtensionLoader;
 import org.caleydo.core.util.logging.Logger;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.action.ContributionItem;
@@ -235,6 +240,18 @@ public class DemoApplication implements IApplication, Listener {
 			layout.setEditorAreaVisible(false);
 			// layout.addView("lineup.demo.university.wur2013", IPageLayout.TOP, IPageLayout.RATIO_MAX,
 			// IPageLayout.ID_EDITOR_AREA);
+
+			List<String> views = ExtensionUtils.loadExtensions("org.caleydo.vis.lineup.demo.initial",
+					new IExtensionLoader<String>() {
+				@Override
+				public String load(IConfigurationElement elem) throws CoreException {
+					return elem.getAttribute("view");
+				}
+			});
+			for (String v : views) {
+				layout.addView(v, IPageLayout.TOP, IPageLayout.RATIO_MAX, IPageLayout.ID_EDITOR_AREA);
+			}
+
 			layout.setFixed(true);
 		}
 	}
