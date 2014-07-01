@@ -49,6 +49,10 @@ public class GenericView extends ARcpRankTableDemoView {
 		if (spec == null && this.serializedView instanceof GenericSpecView
 				&& ((GenericSpecView) serializedView).getSpec() != null)
 			spec = ((GenericSpecView) serializedView).call();
+		return createBuilder(spec, tableSpec);
+	}
+
+	protected GenericModelBuilder createBuilder(ImportSpec spec, RankTableSpec tableSpec) {
 		return new GenericModelBuilder(spec, tableSpec);
 	}
 
