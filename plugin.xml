@@ -106,7 +106,7 @@
          </menu>
          <menu
                id="org.caleydo.lineup.menu.demos"
-               label="Demos">
+               label="Datasets">
          </menu>
          <menu
                id="org.caleydo.lineup.menu.window"
