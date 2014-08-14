@@ -61,7 +61,7 @@ public class MappingSpec {
 			for (Map.Entry<Double, Double> entry : this.mapping.entrySet())
 				m.put(entry.getKey(), entry.getValue());
 		} else {
-			m.updateFromCode(code);
+			m.fromJavaScript(code);
 		}
 
 	}
