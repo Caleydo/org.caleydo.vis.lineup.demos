@@ -15,3 +15,4 @@ Export-Package: demo,
  demo.project,
  demo.project.model,
  generic
+Import-Package: org.eclipse.ui.internal.net.auth
