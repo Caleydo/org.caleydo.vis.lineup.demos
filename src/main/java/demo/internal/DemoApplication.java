@@ -48,7 +48,8 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
  */
 public class DemoApplication implements IApplication, Listener {
 
-	private File projectLocation;
+	// auto start project
+	private File projectLocation = new File("start.lineup");
 
 	@Override
 	public Object start(IApplicationContext context) {
@@ -59,6 +60,8 @@ public class DemoApplication implements IApplication, Listener {
 
 		Display display = PlatformUI.createDisplay();
 		display.addListener(SWT.OpenDocument, this);
+
+
 		try {
 			int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
 			if (returnCode == PlatformUI.RETURN_RESTART) {
