@@ -162,7 +162,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 				public void on(int numColumn, int numRow, List<? extends List<String>> dataMatrix) {
 					onPreviewChanged(numColumn, numRow, dataMatrix);
 				}
-			}, false);
+			}, false, false);
 
 			gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 			gd.minimumHeight = 300;
