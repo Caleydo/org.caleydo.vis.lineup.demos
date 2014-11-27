@@ -25,16 +25,19 @@ public class ShowWizardHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ImportSpec spec = new ImportWizard().call();
+		showView(spec, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
+		return null;
+	}
+
+	public static void showView(ImportSpec spec, IWorkbenchPage page) {
 		if (spec == null)
-			return null;
+			return;
 		GenericView.lastSpec = spec;
 		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-					.showView("lineup.demo.generic", System.currentTimeMillis() + "", IWorkbenchPage.VIEW_ACTIVATE);
+			page.showView("lineup.demo.generic", System.currentTimeMillis() + "", IWorkbenchPage.VIEW_ACTIVATE);
 		} catch (PartInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
 	}
 }

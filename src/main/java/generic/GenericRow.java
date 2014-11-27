@@ -59,11 +59,23 @@ public class GenericRow extends ARow {
 		return Objects.toString(get(index), "");
 	}
 
-	public static class DoubleGetter extends ADoubleFunction<IRow> {
+	public static interface IndexedGetter {
+		int getIndex();
+	}
+
+	public static class DoubleGetter extends ADoubleFunction<IRow> implements IndexedGetter {
 		private final int index;
 
 		public DoubleGetter(int index) {
 			this.index = index;
+		}
+
+		/**
+		 * @return the index, see {@link #index}
+		 */
+		@Override
+		public int getIndex() {
+			return index;
 		}
 
 		@Override
@@ -72,11 +84,19 @@ public class GenericRow extends ARow {
 		}
 	}
 
-	public static class StringGetter implements Function<IRow, String> {
+	public static class StringGetter implements Function<IRow, String>, IndexedGetter {
 		private final int index;
 
 		public StringGetter(int index) {
 			this.index = index;
+		}
+
+		/**
+		 * @return the index, see {@link #index}
+		 */
+		@Override
+		public int getIndex() {
+			return index;
 		}
 
 		@Override
@@ -85,11 +105,19 @@ public class GenericRow extends ARow {
 		}
 	}
 
-	public static class IntGetter implements Function<IRow, Integer> {
+	public static class IntGetter implements Function<IRow, Integer>, IndexedGetter {
 		private final int index;
 
 		public IntGetter(int index) {
 			this.index = index;
+		}
+
+		/**
+		 * @return the index, see {@link #index}
+		 */
+		@Override
+		public int getIndex() {
+			return index;
 		}
 
 		@Override
@@ -98,11 +126,19 @@ public class GenericRow extends ARow {
 		}
 	}
 
-	public static class DateGetter implements Function<IRow, Date> {
+	public static class DateGetter implements Function<IRow, Date>, IndexedGetter {
 		private final int index;
 
 		public DateGetter(int index) {
 			this.index = index;
+		}
+
+		/**
+		 * @return the index, see {@link #index}
+		 */
+		@Override
+		public int getIndex() {
+			return index;
 		}
 
 		@Override

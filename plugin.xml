@@ -1,90 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.caleydo.vis.lineup.demo.initial" name="Initial Views" schema="schema/org.caleydo.vis.lineup.demo.initial.exsd"/>
 	<extension
          point="org.eclipse.ui.views">
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.wur.WorldUniversityRankingView"
-            id="lineup.demo.university.wur"
-            name="World University Ranking History">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="nasatxl.NASATxlResultsView"
-            id="lineup.demo.nasatxl"
-            name="NASA Task Load Index User Study Results">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.wur.WorldUniversityRanking2012View"
-            id="lineup.demo.university.wur2012"
-            name="World University Ranking 2012">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.wur.WorldUniversityRanking2013View"
-            id="lineup.demo.university.wur2013"
-            name="World University Ranking 2013">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.wur.WorldUniversityRankingEvaluation1View"
-            id="lineup.eval.university.wur2012"
-            name="World University Ranking 2012">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.arwu.AcademicRankingOfWorldUniverstiesView"
-            id="lineup.demo.university.arwu"
-            name="Academic Ranking of World Universties">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.mup.MeasuringUniversityPerformanceView"
-            id="lineup.demo.university.mup"
-            name="Measuring University Performance">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.mixed.MixedView"
-            id="lineup.demo.university.mixed"
-            name="University Rankings 2012">
-      </view>
-      <view
-            allowMultiple="true"
-            category="org.caleydo.core.views"
-            class="university.top100under50.Top100Under50View"
-            id="lineup.demo.university.top100under50"
-            name="Top 100 under 50 2012">
-      </view>
-      <view
-            class="food.FoodView"
-            id="lineup.demo.food"
-            name="Food Nutrition"
-            restorable="true">
-      </view>
-      <view
+         <view
             allowMultiple="true"
             category="org.caleydo.core.views"
             class="generic.GenericView"
             id="lineup.demo.generic"
             name="Generic"
-            restorable="false">
+            restorable="true">
       </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="demo.DemoApplication$Perspective"
+            class="demo.internal.DemoApplication$Perspective"
             id="lineup.demo.per"
             name="Demos">
       </perspective>
@@ -96,7 +28,7 @@
       <application
             thread="main">
          <run
-               class="demo.DemoApplication">
+               class="demo.internal.DemoApplication">
          </run>
       </application>
    </extension>
@@ -122,7 +54,7 @@
          </property>
          <property
                name="windowImages"
-               value="platform:/plugin/org.caleydo.core/resources/icons/caleydo_16.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_32.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_48.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_64.png,platform:/plugin/org.caleydo.core/resources/icons/caleydo_128.png">
+               value="platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_16.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_32.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_48.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_64.png,platform:/plugin/org.caleydo.rcp/resources/icons/caleydo_128.png">
          </property>
       </product>
    </extension>
@@ -139,6 +71,27 @@
                   style="push">
             </command>
             <command
+                  commandId="org.caleydo.vis.lineup.demos.export"
+                  label="&amp;Export Data"
+                  style="push">
+            </command>
+            <separator
+                  name="org.caleydo.vis.lineup.demos.separator1">
+            </separator>
+            <command
+                  commandId="org.caleydo.vis.lineup.demos.loadproject"
+                  label="Open Project"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.caleydo.vis.lineup.demos.saveproject"
+                  label="Save Project"
+                  style="push">
+            </command>
+            <separator
+                  name="org.caleydo.vis.lineup.demos.separator2">
+            </separator>
+            <command
                   commandId="org.eclipse.ui.window.preferences"
                   label="Preferences"
                   mnemonic="P"
@@ -150,6 +103,10 @@
                   mnemonic="E"
                   style="push">
             </command>
+         </menu>
+         <menu
+               id="org.caleydo.lineup.menu.demos"
+               label="Datasets">
          </menu>
          <menu
                id="org.caleydo.lineup.menu.window"
@@ -195,6 +152,21 @@
             id="org.caleydo.vis.lineup.demos.showwizard"
             name="Load &amp;Data">
       </command>
+      <command
+            defaultHandler="demo.handler.LoadProjectHandler"
+            id="org.caleydo.vis.lineup.demos.loadproject"
+            name="&amp;Load Project">
+      </command>
+      <command
+            defaultHandler="demo.handler.SaveProjectHandler"
+            id="org.caleydo.vis.lineup.demos.saveproject"
+            name="Save &amp;Project">
+      </command>
+      <command
+            defaultHandler="demo.handler.ExportTableHandler"
+            id="org.caleydo.vis.lineup.demos.export"
+            name="&amp;Export Table">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.splashHandlers">
@@ -202,5 +174,11 @@
             productId="org.caleydo.vis.lineup.demos.product"
             splashId="org.caleydo.core.startup.progress">
       </splashHandlerProductBinding>
+   </extension>
+   <extension
+         point="org.caleydo.serialize.addon">
+      <addon
+            class="generic.SerializationAddon">
+      </addon>
    </extension>
 </plugin>
