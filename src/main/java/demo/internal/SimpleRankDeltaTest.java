@@ -41,15 +41,15 @@ public class SimpleRankDeltaTest implements IModelBuilder {
 			public double applyPrimitive(IRow in) {
 				return ((SimpleRow) in).value;
 			}
-		}, GLRenderers.drawText("Float", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
-				new PiecewiseMapping(0, Float.NaN), DoubleInferrers.MEAN);
+		}, GLRenderers.drawText("Double", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
+				new PiecewiseMapping(0, Double.NaN), DoubleInferrers.MEAN);
 		final DoubleRankColumnModel b = new DoubleRankColumnModel(new ADoubleFunction<IRow>() {
 			@Override
 			public double applyPrimitive(IRow in) {
 				return ((SimpleRow) in).value2;
 			}
-		}, GLRenderers.drawText("Float2", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
-				new PiecewiseMapping(0, Float.NaN), DoubleInferrers.MEAN);
+		}, GLRenderers.drawText("Double2", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
+				new PiecewiseMapping(0, Double.NaN), DoubleInferrers.MEAN);
 		RankDeltaRankColumnModel delta = new RankDeltaRankColumnModel();
 
 		table.add(delta);
@@ -59,8 +59,8 @@ public class SimpleRankDeltaTest implements IModelBuilder {
 		Random r = new Random(200);
 		List<IRow> rows = new ArrayList<>(100);
 		for (int i = 0; i < 100; ++i) {
-			final float v1 = Math.round(r.nextFloat() * 10) / 10.f;
-			final float v2 = v1 + (r.nextBoolean() ? 0.02f : -0.02f);
+			final double v1 = Math.round(r.nextDouble() * 10) / 10.f;
+			final double v2 = v1 + (r.nextBoolean() ? 0.02f : -0.02f);
 			rows.add(new SimpleRow(v1, v2));
 		}
 		table.addData(rows);
@@ -73,10 +73,10 @@ public class SimpleRankDeltaTest implements IModelBuilder {
 
 	static class SimpleRow extends ARow {
 
-		private final float value;
-		private final float value2;
+		private final double value;
+		private final double value2;
 
-		public SimpleRow(float v, float v2) {
+		public SimpleRow(double v, double v2) {
 			this.value = v;
 			this.value2 = v2;
 		}

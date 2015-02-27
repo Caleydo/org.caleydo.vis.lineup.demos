@@ -109,14 +109,14 @@ public class RowDataDomainConfigWidget {
 		int numHeaderRows = 0;
 		for (int i = 0; i < dataMatrix.size(); i++) {
 			List<String> row = dataMatrix.get(i);
-			int numFloatsFound = 0;
+			int numDoublesFound = 0;
 			for (int j = 0; j < row.size(); j++) {
 				String text = row.get(j);
 				try {
 					// This currently only works for numerical values
-					Float.parseFloat(text);
-					numFloatsFound++;
-					if (numFloatsFound >= 3) {
+					Double.parseDouble(text);
+					numDoublesFound++;
+					if (numDoublesFound >= 3) {
 						this.setNumHeaderRows(numHeaderRows);
 						return;
 					}

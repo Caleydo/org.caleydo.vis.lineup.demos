@@ -31,7 +31,7 @@ public class GenericRow extends ARow {
 	public double getDouble(int index) {
 		Object r = get(index);
 		if (r instanceof Double)
-			return ((Double) r).floatValue();
+			return ((Double) r).doubleValue();
 		return Double.NaN;
 	}
 

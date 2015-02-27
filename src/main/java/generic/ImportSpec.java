@@ -59,7 +59,7 @@ public class ImportSpec extends MatrixDefinition {
 	 *
 	 */
 	public ImportSpec() {
-		setColumnOfRowIds(-1);
+		setColumnOfRowIds(0);
 	}
 
 	/**

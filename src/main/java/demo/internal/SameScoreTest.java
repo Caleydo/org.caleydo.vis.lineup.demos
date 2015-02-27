@@ -40,13 +40,13 @@ public class SameScoreTest implements IModelBuilder {
 			public double applyPrimitive(IRow in) {
 				return ((SimpleRow) in).value;
 			}
-		}, GLRenderers.drawText("Float", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
-				new PiecewiseMapping(0, Float.NaN), DoubleInferrers.MEAN));
+		}, GLRenderers.drawText("Double", VAlign.CENTER), new Color("#ffb380"), new Color("#ffe6d5"),
+				new PiecewiseMapping(0, Double.NaN), DoubleInferrers.MEAN));
 
 		Random r = new Random(200);
 		List<IRow> rows = new ArrayList<>(100);
 		for (int i = 0; i < 100; ++i)
-			rows.add(new SimpleRow(Math.round(r.nextFloat() * 10) / 10.f));
+			rows.add(new SimpleRow(Math.round(r.nextDouble() * 10) / 10.f));
 		table.addData(rows);
 	}
 
@@ -57,8 +57,8 @@ public class SameScoreTest implements IModelBuilder {
 
 	static class SimpleRow extends ARow {
 
-		private final float value;
-		public SimpleRow(float v) {
+		private final double value;
+		public SimpleRow(double v) {
 			this.value = v;
 		}
 

@@ -457,7 +457,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 						protected Object openDialogBox(Control cellEditorWindow) {
 							Dialog dialog;
 							if (element instanceof DoubleColumnSpec)
-								dialog = new FloatPropertyDialog(cellEditorWindow.getShell(),
+								dialog = new DoublePropertyDialog(cellEditorWindow.getShell(),
 										(DoubleColumnSpec) getValue());
 							else if (element instanceof DateColumnSpec)
 								dialog = new DatePropertyDialog(cellEditorWindow.getShell(),
@@ -531,7 +531,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 		}
 	}
 
-	class FloatPropertyDialog extends Dialog {
+	class DoublePropertyDialog extends Dialog {
 		private DoubleColumnSpec col;
 		private Text minUI, maxUI;
 		private Combo combo;
@@ -539,7 +539,7 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 		/**
 		 *
 		 */
-		public FloatPropertyDialog(Shell shell, DoubleColumnSpec spec) {
+		public DoublePropertyDialog(Shell shell, DoubleColumnSpec spec) {
 			super(shell);
 			this.col = spec;
 		}
@@ -580,8 +580,8 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 
 		@Override
 		protected void okPressed() {
-			col.mappingMin = toFloat(minUI);
-			col.mappingMax = toFloat(maxUI);
+			col.mappingMin = toDouble(minUI);
+			col.mappingMax = toDouble(maxUI);
 			switch (combo.getText()) {
 			case "NaN":
 				col.inferer = EInferer.NaN;
@@ -600,9 +600,9 @@ public class ImportWizard extends Wizard implements SafeCallable<ImportSpec> {
 		 * @param minUI2
 		 * @return
 		 */
-		private float toFloat(Text t) {
+		private double toDouble(Text t) {
 			String s = t.getText().trim();
-			return s.isEmpty() ? Float.NaN : Float.parseFloat(s);
+			return s.isEmpty() ? Double.NaN : Double.parseDouble(s);
 		}
 	}
 
